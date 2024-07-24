@@ -11,7 +11,7 @@ UTILS_DIR = utils
 
 PARSING_SRC = parser.c parsing_errors.c
 GNL_SRC = get_next_line.c
-UTILS_SRC = printing_utils.c string_utils.c string_utils2.c
+UTILS_SRC = printing_utils.c string_utils.c string_utils2.c ft_atoi.c
 MAIN_SRC = cub3D.c
 
 PARSING_FILES = $(addprefix $(PARSING_DIR)/,$(PARSING_SRC))

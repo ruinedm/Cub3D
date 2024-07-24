@@ -1,12 +1,12 @@
 
-C 50,50,4294967296
 
 
-NO ./tex/512_wall.xpm
-SO ./tex/512_wall.xpm
-WE ./tex/512_wall.xpm
-EA ./tex/512_wall.xpm
-F 0,200,200
+F 0,200,2000
+NO ./tex/NO.xpm
+EA ./tex/EA.xpm
+SO ./tex/SO.xpm
+WE ./tex/WE.xpm
+C 50,50,8000
 
 11111
 10S01
