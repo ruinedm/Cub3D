@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/23 20:04:13 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/24 01:09:37 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,19 @@
 # include <limits.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <stdbool.h>
+# include <stdio.h>
 
+enum e_map_options
+{
+	C,
+	NO,
+	SO,
+	WE,
+	EA,
+	F,
+	MAP
+};
 
 typedef struct	s_cub3d
 {
@@ -48,5 +60,6 @@ char	*ft_strdup(char *s1);
 char	*ft_substr(const char *s, unsigned int start, size_t len);
 char	*ft_strjoin(char *s1, char *s2);
 int		ft_strcmp(const char *s1, const char *s2);
-
+bool	is_ws(char c);
+int		is_digit(int c);
 #endif

@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 20:02:05 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/23 20:05:17 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/24 01:09:44 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,4 +24,12 @@ int	ft_strcmp(const char *s1, const char *s2)
 		i++;
 	}
 	return (0);
+}
+bool	is_ws(char c)
+{
+	return (c == ' ' || (c >= 9 && c <= 13));
+}
+int		is_digit(int c)
+{
+	return ((c >= '0' && c <= '9'));
 }

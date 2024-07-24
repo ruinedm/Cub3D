@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 11:28:26 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/23 19:49:25 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/24 01:18:39 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char	*extract_line(char **ptr_to_save)
 	newline = ft_strchr(*ptr_to_save, '\n');
 	if (newline)
 	{
-		line = ft_substr(*ptr_to_save, 0, newline - *ptr_to_save + 1);
+		line = ft_substr(*ptr_to_save, 0, newline - *ptr_to_save);
 		temp = *ptr_to_save;
 		*ptr_to_save = ft_strdup(newline + 1);
 		free(temp);

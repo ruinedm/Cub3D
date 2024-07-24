@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/23 20:05:51 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/23 20:39:30 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int main(int ac, char **av)
 {
 	t_cub3d	program;
 
-	if (ac < 2)
+	if (ac != 2)
 	{
 		print_parsing_error("Invalid number of arguments");
 		return (1);
