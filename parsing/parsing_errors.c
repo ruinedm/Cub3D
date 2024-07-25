@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 16:27:59 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/25 01:36:48 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/25 03:10:17 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 void	print_parsing_error(char *str)
 {
-	ft_putstr_fd(2, "Error: ");
+	ft_putstr_fd(2, "Error\n");
 	if (str)
 	{
 		ft_putstr_fd(2, str);
@@ -24,7 +24,7 @@ void	print_parsing_error(char *str)
 	else
 		perror("");
 	ft_putstr_fd(2, "Expected input:\n./cub3D {config_file}.cub\n");
-	ft_putstr_fd(2, "Make sure the file exists and you have read pernissions.\n");
+	ft_putstr_fd(2, "Make sure the file exists and you have read permissions.\n");
 	ft_putstr_fd(2, "The config should be valid according to the ");
 	ft_putstr_fd(2, "subject's rules.\n");
 }

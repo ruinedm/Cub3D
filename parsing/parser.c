@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 16:25:15 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/25 02:04:53 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/25 03:21:36 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,11 @@ t_map *get_map(char *first_line, t_cub3d *program)
 	return (map);
 }
 
+// bool	check_map(t_map *map)
+// {
+	
+// }
+
 int	parse_line(char *str, t_cub3d *program, bool *found_map)
 {
 	int 	i;
@@ -141,10 +146,11 @@ int	parse_line(char *str, t_cub3d *program, bool *found_map)
 	{
 		*found_map = true;
 		if (*str != '1')
-			return (print_parsing_error("Invalide map"), 0);
+			return (print_parsing_error("Invalid map"), 0);
 		program->map = get_map(str, program);
-		
 	}
+	else
+		return (print_parsing_error("Invalid config file"), 0);
 	return (1);
 }
 
