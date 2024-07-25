@@ -6,11 +6,41 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 22:14:31 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/25 01:37:18 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/25 02:17:38 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3D.h"
+
+static char	*line_with_no_ws(char *str)
+{
+	int i;
+	int real_size;
+	char *real;
+
+	i = 0;
+	real_size = 0;
+	while(str[i])
+	{
+		if(!is_ws(str[i]))
+			real_size++;
+		i++;
+	}
+	real = malloc(real_size + 1);
+	i = 0;
+	real_size = 0;
+	while(str[i])
+	{
+		if(!is_ws(str[i]))
+		{
+			real[real_size] = str[i];
+			real_size++;
+		}
+		i++;
+	}
+	real[real_size] = '\0';
+	return (real);
+}
 
 t_map	*ft_lstnew_mapline(char *line)
 {
@@ -19,9 +49,7 @@ t_map	*ft_lstnew_mapline(char *line)
 	new_node = malloc(sizeof(t_map));
 	if (!new_node)
 		return (NULL);
-	while(*line && is_ws(*line))
-		line++;
-	new_node->current_line = ft_strdup(line);
+	new_node->current_line = line_with_no_ws(line);
 	new_node->line_len = ft_strlen(line);
 	new_node->next = NULL;
 	new_node->next = NULL;
