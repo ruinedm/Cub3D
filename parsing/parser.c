@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 16:25:15 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/24 05:45:01 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/25 02:04:53 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,9 +102,25 @@ bool	set_textures(char *str, t_cub3d *program, int texture)
 	return (true);
 }
 
-int	parse_line(char *str, t_cub3d *program)
+t_map *get_map(char *first_line, t_cub3d *program)
 {
-	int i;
+	char *line;
+	t_map *map;
+	t_map *current;
+
+	map = ft_lstnew_mapline(first_line);
+	while ((line = get_next_line(program->map_fd)))
+	{
+		current = ft_lstnew_mapline(line);
+		ft_lstaddback_mapline(&map, current);
+		free(line);
+	}
+	return (map);
+}
+
+int	parse_line(char *str, t_cub3d *program, bool *found_map)
+{
+	int 	i;
 
 	i = 0;
 	while (*str && is_ws(*str))
@@ -121,6 +137,14 @@ int	parse_line(char *str, t_cub3d *program)
 		return (set_textures(str, program, WE));
 	else if (*str == 'E' && *(str + 1) == 'A')
 		return (set_textures(str, program, EA));
+	else if (*str == '1' || *str == 'S' || *str == '0')
+	{
+		*found_map = true;
+		if (*str != '1')
+			return (print_parsing_error("Invalide map"), 0);
+		program->map = get_map(str, program);
+		
+	}
 	return (1);
 }
 
@@ -128,11 +152,12 @@ int	parser(t_cub3d *program, char *map_name)
 {
 	int i;
 	int fd;
-	char **str;
 	char *line;
+	bool found_map;
 
 	line = NULL;
-	(void)program;
+	i = 0;
+	found_map = false;
 	while (map_name[i] && map_name[i] != '.')
 		i++;
 	if(ft_strcmp(&map_name[i], ".cub"))
@@ -140,14 +165,18 @@ int	parser(t_cub3d *program, char *map_name)
 	fd = open(map_name, O_RDONLY, 0644);
 	if (fd == -1)
 		return (print_parsing_error(NULL), 0);
+	program->map_fd = fd;
 	while((line = get_next_line(fd)))
 	{
-		if (!parse_line(line, program))
+		if (*line && !parse_line(line, program, &found_map))
 			return (free(line), 0);
 		free(line);
 	}
+	if (!found_map)
+		return (print_parsing_error("Couldn't find the map"), 0);
 	printf("R: %i // G: %i // B: %i\n", program->floor_r, program->floor_g, program->floor_b);
 	printf("R: %i // G: %i // B: %i\n", program->ceiling_r, program->ceiling_g, program->ceiling_b);
 	printf("NO: %s\nEA: %s\nSO: %s\nWE: %s\n", program->no_path, program->ea_path, program->so_path, program->we_path);
+	ft_lstiter_mapline(program->map);
 	return (1);
 }

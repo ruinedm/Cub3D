@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/24 05:39:28 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/25 01:34:37 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,14 @@ enum e_map_options
 	MAP
 };
 
+typedef struct	s_map
+{
+	char			*current_line;
+	int				line_len;
+	struct s_map	*prev;
+	struct s_map	*next;
+} t_map;
+
 typedef struct	s_cub3d
 {
 	char	*no_path;
@@ -45,15 +53,16 @@ typedef struct	s_cub3d
 	int		ceiling_r;
 	int		ceiling_g;
 	int		ceiling_b;
+	int		map_fd;
+	t_map	*map;
 } t_cub3d;
 
-
-char	*get_next_line(int fd);
 
 
 // PARSING
 int		parser(t_cub3d *program, char *map_name);
 void	print_parsing_error(char *str);
+char	*get_next_line(int fd);
 
 
 // UTILS
@@ -67,4 +76,8 @@ int		ft_strcmp(const char *s1, const char *s2);
 bool	is_ws(char c);
 int		is_digit(int c);
 int		ft_atoi(const char *str);
+t_map	*ft_lstnew_mapline(char *line);
+t_map	*ft_lstlast_mapline(t_map *lst);
+void	ft_lstaddback_mapline(t_map **head, t_map *new);
+void	ft_lstiter_mapline(t_map *head);
 #endif
