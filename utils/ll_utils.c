@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 22:14:31 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/25 02:24:32 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/16 19:33:10 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_map	*ft_lstnew_mapline(char *line)
 	new_node->current_line = line_with_no_ws(line);
 	new_node->line_len = ft_strlen(line);
 	new_node->next = NULL;
-	new_node->next = NULL;
+	new_node->prev = NULL;
 	return (new_node);
 }
 
@@ -74,6 +74,7 @@ t_map	*ft_lstlast_mapline(t_map *lst)
 
 void	ft_lstaddback_mapline(t_map **head, t_map *new)
 {
+	t_map *last;
 	if (!head)
 		return ;
 	if (!*head)
@@ -81,7 +82,10 @@ void	ft_lstaddback_mapline(t_map **head, t_map *new)
 		*head = new;
 		return ;
 	}
-	ft_lstlast_mapline(*head)->next = new;
+	last = ft_lstlast_mapline(*head);
+	last->next = new;
+	new->prev = last;
+	
 }
 
 void ft_lstiter_mapline(t_map *head)

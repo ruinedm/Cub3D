@@ -1,7 +1,7 @@
 CC = cc
 NAME = cub3D
 INCLUDE = cub3D.h
-# Flag = FLAGS = -Wall -Wextra -Werror
+FLAGS = -g # -Wall -Wextra -Werror
 
 OBJ_DIR = obj
 PARSING_DIR = parsing

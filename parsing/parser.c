@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 16:25:15 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/16 18:42:03 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/16 20:06:05 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,12 +130,79 @@ bool	set_textures(char *str, t_cub3d *cube, int texture)
 	return (true);
 }
 
+
+bool is_valid_fl(char *line)
+{
+	while(*line)
+	{
+		if (*line != ' ' && *line != '1')
+			return (false);
+		line++;
+	}
+	line--;
+	return (true);
+}
+
+bool is_valid_inner(t_map *map)
+{
+	char *line;
+	char *row_top;
+	char *row_bottom;
+	int length_current;
+	int length_top;
+	int length_bottom;
+	int i;
+
+	while(map && map->next)
+	{
+		line = map->current_line;
+		row_top = map->prev->current_line;
+		row_bottom = map->next->current_line;
+		length_current = ft_strlen(line);
+		length_top = ft_strlen(row_top);
+		length_bottom = ft_strlen(row_bottom);
+		// printf("Current Line: %s (Length: %d)\n", line, length_current);
+        // printf("Top Line: %s (Length: %d)\n", row_top, length_top);
+        // printf("Bottom Line: %s (Length: %d)\n", row_bottom, length_bottom);
+
+		i = 0;
+		if (*line != '1' || line[ft_strlen(line) - 1] != '1')
+			return (false);
+		// if (length_current > length_top)
+		// {
+		// 	while(line[i])
+		// 	{
+		// 		if (i >= length_top && line[i] != '1')
+		// 		{
+		// 			printf("%s // %i // %i\n", line, length_current, length_top);
+		// 			return (false);
+		// 		}
+		// 		i++;
+		// 	}
+		// }
+		// i = 0;
+		// if (length_current > length_bottom)
+		// {
+		// 	while(line[i])
+		// 	{
+		// 		if (i >= length_bottom && line[i] != '1')
+		// 			return (false);
+		// 		i++;
+		// 	}
+		// }
+		map = map->next;
+	}
+	return (true);
+}
+
 t_map *get_map(char *first_line, t_cub3d *cube)
 {
 	char *line;
 	t_map *map;
 	t_map *current;
 
+	if(!is_valid_fl(first_line))
+		return (NULL);
 	map = ft_lstnew_mapline(first_line);
 	while ((line = get_next_line(cube->map_fd)))
 	{
@@ -143,6 +210,8 @@ t_map *get_map(char *first_line, t_cub3d *cube)
 		ft_lstaddback_mapline(&map, current);
 		free(line);
 	}
+	if (!is_valid_inner(map->next) || !is_valid_fl(current->current_line))
+		return (NULL);
 	return (map);
 }
 
@@ -171,6 +240,8 @@ int	parse_line(char *str, t_cub3d *cube)
 		if (*str != '1')
 			return (print_parsing_error("Invalid map"), 0);
 		cube->map = get_map(str, cube);
+		if (!cube->map)
+			return (print_parsing_error("Invalid map"), 0);
 	}
 	else
 		return (print_parsing_error("Invalid config file"), 0);
@@ -200,8 +271,10 @@ int	parser(t_cub3d *cube, char *map_name)
 			return (free(line), 0);
 		free(line);
 	}
+	if (!do_i_exist(cube, F) || !do_i_exist(cube, C) || !do_i_exist(cube, EA) || !do_i_exist(cube, SO) || !do_i_exist(cube, WE) || !do_i_exist(cube, NO))
+		return (print_parsing_error("Missing parameter"), 0);
 	if (!cube->map)
-		return (print_parsing_error("Couldn't find the map"), 0);
+		return (print_parsing_error("Invalid or missing map"), 0);
 	printf("R: %i // G: %i // B: %i\n", cube->floor_r, cube->floor_g, cube->floor_b);
 	printf("R: %i // G: %i // B: %i\n", cube->ceiling_r, cube->ceiling_g, cube->ceiling_b);
 	printf("NO: %s\nEA: %s\nSO: %s\nWE: %s\n", cube->no_path, cube->ea_path, cube->so_path, cube->we_path);

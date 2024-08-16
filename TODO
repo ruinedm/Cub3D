@@ -1,2 +1,3 @@
-- Check if the map is valid
--check if aboubakr here
+- Map valid code??
+- Make sure the map is always at the end
+- Check if the player exists (can only have one position and can only face one direction)
