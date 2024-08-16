@@ -1,12 +1,12 @@
 
 
 
-F 0,200,2000
+F 0,200,200
 NO ./tex/NO.xpm
 SO ./tex/SO.xpm
 WE ./tex/WE.xpm
 EA ./tex/EA.xpm
-C 50,50,8000
+C 50,50,256
 
 11111
 10S01

@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/25 03:09:41 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/16 17:31:19 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ typedef struct	s_cub3d
 
 
 // PARSING
-int		parser(t_cub3d *program, char *map_name);
+int		parser(t_cub3d *cube, char *map_name);
 void	print_parsing_error(char *str);
 char	*get_next_line(int fd);
 

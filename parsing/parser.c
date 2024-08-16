@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 16:25:15 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/25 03:21:36 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/16 18:42:03 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,30 @@ bool	is_good_color(char *str)
 	return (true);
 }
 
-bool	set_color(char *str, t_cub3d *program, int c_type)
+bool	do_i_exist(t_cub3d *cube, int type)
 {
+	if (type == F)
+		return (cube->floor_r);
+	else if (type == C)
+		return (cube->ceiling_r);
+	else if (type == NO)
+		return (cube->no_path);
+	else if (type == SO)
+		return (cube->so_path);
+	else if (type == WE)
+		return (cube->we_path);
+	else if (type == EA)
+		return (cube->ea_path);
+	return (false);
+}
+
+bool	set_color(char *str, t_cub3d *cube, int c_type)
+{
+	int r;
+	int g;
+	int b;
+	if (do_i_exist(cube, c_type))
+		return (print_parsing_error("Duplicate paramaters are not accepted!"), false);
 	str++;
 	while (*str && is_ws(*str))
 		str++;
@@ -59,32 +81,38 @@ bool	set_color(char *str, t_cub3d *program, int c_type)
 		str++;
 	if(!is_good_color(str))
 		return (print_parsing_error("Invalid color format."), 0);
-	if (c_type == F)
-		program->floor_r = ft_atoi(str);
-	else if (c_type == C)
-		program->ceiling_r = ft_atoi(str);
+		r = ft_atoi(str);
 	while (*str && is_digit(*str))
 		str++;
 	str++;
-	if (c_type == F)
-		program->floor_g = ft_atoi(str);
-	else if (c_type == C)
-		program->ceiling_g = ft_atoi(str);
-		
+		g = ft_atoi(str);
 	while (*str && is_ws(*str))
 		str++;
 	while (*str && is_digit(*str))
 		str++;
 	str++;
+		b = ft_atoi(str);
+	if ((r < 0 || r > 255) || (g < 0 || g > 255) || (b < 0 || b > 255))
+		return (print_parsing_error("Invalid color range"), false);
 	if (c_type == F)
-		program->floor_b = ft_atoi(str);
-	else if (c_type == C)
-		program->ceiling_b = ft_atoi(str);
+	{
+		cube->floor_r = r;
+		cube->floor_g = g;
+		cube->floor_b = b;
+	}
+	else
+	{
+		cube->ceiling_r = r;
+		cube->ceiling_g = g;
+		cube->ceiling_b = b;
+	}
 	return (true);
 }
 
-bool	set_textures(char *str, t_cub3d *program, int texture)
+bool	set_textures(char *str, t_cub3d *cube, int texture)
 {
+	if(do_i_exist(cube, texture))
+		return (print_parsing_error("Duplicate paramaters are not accepted!"), false);
 	str++;
 	str++;
 	while(*str && is_ws(*(str)))
@@ -92,24 +120,24 @@ bool	set_textures(char *str, t_cub3d *program, int texture)
 	if(!*str)
 		return (print_parsing_error("Invalid north texture"), false);
 	if (texture == NO)
-		program->no_path = ft_strdup(str);
+		cube->no_path = ft_strdup(str);
 	else if (texture == SO)
-		program->so_path = ft_strdup(str);
+		cube->so_path = ft_strdup(str);
 	else if (texture == WE)
-		program->we_path = ft_strdup(str);
+		cube->we_path = ft_strdup(str);
 	else if (texture == EA)
-		program->ea_path = ft_strdup(str);
+		cube->ea_path = ft_strdup(str);
 	return (true);
 }
 
-t_map *get_map(char *first_line, t_cub3d *program)
+t_map *get_map(char *first_line, t_cub3d *cube)
 {
 	char *line;
 	t_map *map;
 	t_map *current;
 
 	map = ft_lstnew_mapline(first_line);
-	while ((line = get_next_line(program->map_fd)))
+	while ((line = get_next_line(cube->map_fd)))
 	{
 		current = ft_lstnew_mapline(line);
 		ft_lstaddback_mapline(&map, current);
@@ -118,12 +146,8 @@ t_map *get_map(char *first_line, t_cub3d *program)
 	return (map);
 }
 
-// bool	check_map(t_map *map)
-// {
-	
-// }
 
-int	parse_line(char *str, t_cub3d *program, bool *found_map)
+int	parse_line(char *str, t_cub3d *cube)
 {
 	int 	i;
 
@@ -131,39 +155,37 @@ int	parse_line(char *str, t_cub3d *program, bool *found_map)
 	while (*str && is_ws(*str))
 		str++;
 	if (*str == 'F' && is_ws(*(str + 1)))
-		return (set_color(str, program, F));
+		return (set_color(str, cube, F));
 	else if (*str == 'C' && is_ws(*(str + 1)))
-		return (set_color(str, program, C));
+		return (set_color(str, cube, C));
 	else if (*str == 'N' && *(str + 1) == 'O')
-		return (set_textures(str, program, NO));
+		return (set_textures(str, cube, NO));
 	else if (*str == 'S' && *(str + 1) == 'O')
-		return (set_textures(str, program, SO));
+		return (set_textures(str, cube, SO));
 	else if (*str == 'W' && *(str + 1) == 'E')
-		return (set_textures(str, program, WE));
+		return (set_textures(str, cube, WE));
 	else if (*str == 'E' && *(str + 1) == 'A')
-		return (set_textures(str, program, EA));
+		return (set_textures(str, cube, EA));
 	else if (*str == '1' || *str == 'S' || *str == '0')
 	{
-		*found_map = true;
 		if (*str != '1')
 			return (print_parsing_error("Invalid map"), 0);
-		program->map = get_map(str, program);
+		cube->map = get_map(str, cube);
 	}
 	else
 		return (print_parsing_error("Invalid config file"), 0);
 	return (1);
 }
 
-int	parser(t_cub3d *program, char *map_name)
+
+int	parser(t_cub3d *cube, char *map_name)
 {
 	int i;
 	int fd;
 	char *line;
-	bool found_map;
 
 	line = NULL;
 	i = 0;
-	found_map = false;
 	while (map_name[i] && map_name[i] != '.')
 		i++;
 	if(ft_strcmp(&map_name[i], ".cub"))
@@ -171,18 +193,18 @@ int	parser(t_cub3d *program, char *map_name)
 	fd = open(map_name, O_RDONLY, 0644);
 	if (fd == -1)
 		return (print_parsing_error(NULL), 0);
-	program->map_fd = fd;
+	cube->map_fd = fd;
 	while((line = get_next_line(fd)))
 	{
-		if (*line && !parse_line(line, program, &found_map))
+		if (*line && !parse_line(line, cube))
 			return (free(line), 0);
 		free(line);
 	}
-	if (!found_map)
+	if (!cube->map)
 		return (print_parsing_error("Couldn't find the map"), 0);
-	printf("R: %i // G: %i // B: %i\n", program->floor_r, program->floor_g, program->floor_b);
-	printf("R: %i // G: %i // B: %i\n", program->ceiling_r, program->ceiling_g, program->ceiling_b);
-	printf("NO: %s\nEA: %s\nSO: %s\nWE: %s\n", program->no_path, program->ea_path, program->so_path, program->we_path);
-	ft_lstiter_mapline(program->map);
+	printf("R: %i // G: %i // B: %i\n", cube->floor_r, cube->floor_g, cube->floor_b);
+	printf("R: %i // G: %i // B: %i\n", cube->ceiling_r, cube->ceiling_g, cube->ceiling_b);
+	printf("NO: %s\nEA: %s\nSO: %s\nWE: %s\n", cube->no_path, cube->ea_path, cube->so_path, cube->we_path);
+	ft_lstiter_mapline(cube->map);
 	return (1);
 }
