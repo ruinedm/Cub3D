@@ -6,14 +6,14 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/16 17:31:19 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/16 21:36:34 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-#include <mlx.h>
+# include <mlx.h>
 # include <fcntl.h>
 # include <limits.h>
 # include <stdlib.h>
@@ -21,6 +21,8 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include <limits.h>
+
+# define NONE -1
 
 enum e_map_options
 {

@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/16 17:31:19 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/16 21:36:56 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 void	initialize_cube(t_cub3d *cube)
 {
-	cube->map_fd = -1;
-	cube->ceiling_b = 0;
-	cube->ceiling_r = 0;
-	cube->ceiling_g = 0;
-	cube->floor_b = 0;
-	cube->floor_r = 0;
-	cube->floor_b = 0;
+	cube->map_fd = NONE;
+	cube->ceiling_b = NONE;
+	cube->ceiling_r = NONE;
+	cube->ceiling_g = NONE;
+	cube->floor_b = NONE;
+	cube->floor_r = NONE;
+	cube->floor_b = NONE;
 	cube->ea_path = NULL;
 	cube->map = NULL;
 	cube->no_path = NULL;

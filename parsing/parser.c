@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 16:25:15 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/16 20:06:05 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/16 23:27:00 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,13 @@ bool	is_good_color(char *str)
 	return (true);
 }
 
+
 bool	do_i_exist(t_cub3d *cube, int type)
 {
 	if (type == F)
-		return (cube->floor_r);
+		return (cube->floor_r != NONE);
 	else if (type == C)
-		return (cube->ceiling_r);
+		return (cube->ceiling_r != NONE);
 	else if (type == NO)
 		return (cube->no_path);
 	else if (type == SO)
@@ -146,53 +147,40 @@ bool is_valid_fl(char *line)
 bool is_valid_inner(t_map *map)
 {
 	char *line;
-	char *row_top;
-	char *row_bottom;
-	int length_current;
-	int length_top;
-	int length_bottom;
+	bool found_player;
 	int i;
 
+	found_player = false;
 	while(map && map->next)
 	{
 		line = map->current_line;
-		row_top = map->prev->current_line;
-		row_bottom = map->next->current_line;
-		length_current = ft_strlen(line);
-		length_top = ft_strlen(row_top);
-		length_bottom = ft_strlen(row_bottom);
-		// printf("Current Line: %s (Length: %d)\n", line, length_current);
-        // printf("Top Line: %s (Length: %d)\n", row_top, length_top);
-        // printf("Bottom Line: %s (Length: %d)\n", row_bottom, length_bottom);
 
 		i = 0;
 		if (*line != '1' || line[ft_strlen(line) - 1] != '1')
 			return (false);
-		// if (length_current > length_top)
-		// {
-		// 	while(line[i])
-		// 	{
-		// 		if (i >= length_top && line[i] != '1')
-		// 		{
-		// 			printf("%s // %i // %i\n", line, length_current, length_top);
-		// 			return (false);
-		// 		}
-		// 		i++;
-		// 	}
-		// }
-		// i = 0;
-		// if (length_current > length_bottom)
-		// {
-		// 	while(line[i])
-		// 	{
-		// 		if (i >= length_bottom && line[i] != '1')
-		// 			return (false);
-		// 		i++;
-		// 	}
-		// }
+		while(line[i])
+		{
+			if (line[i] == 'S' || line[i] == 'W' || line[i] == 'E' || line[i] == 'N')
+			{
+				if (found_player)
+					return (false);
+				found_player = true;
+			}
+			i++;
+		}
 		map = map->next;
 	}
 	return (true);
+}
+
+void ws_to_one(char *str)
+{
+	while(*str)
+	{
+		if (is_ws(*str))
+			*str = '1';
+		str++;
+	}
 }
 
 t_map *get_map(char *first_line, t_cub3d *cube)
@@ -201,11 +189,13 @@ t_map *get_map(char *first_line, t_cub3d *cube)
 	t_map *map;
 	t_map *current;
 
+	ws_to_one(first_line);
 	if(!is_valid_fl(first_line))
 		return (NULL);
 	map = ft_lstnew_mapline(first_line);
 	while ((line = get_next_line(cube->map_fd)))
 	{
+		ws_to_one(line);
 		current = ft_lstnew_mapline(line);
 		ft_lstaddback_mapline(&map, current);
 		free(line);
@@ -237,8 +227,6 @@ int	parse_line(char *str, t_cub3d *cube)
 		return (set_textures(str, cube, EA));
 	else if (*str == '1' || *str == 'S' || *str == '0')
 	{
-		if (*str != '1')
-			return (print_parsing_error("Invalid map"), 0);
 		cube->map = get_map(str, cube);
 		if (!cube->map)
 			return (print_parsing_error("Invalid map"), 0);
