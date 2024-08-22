@@ -6,40 +6,24 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 22:14:31 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/16 19:33:10 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/17 20:58:07 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3D.h"
 
-static char	*line_with_no_ws(char *str)
+int		max_len(t_map *map)
 {
-	int i;
-	int real_size;
-	char *real;
+	int max;
 
-	i = 0;
-	real_size = 0;
-	while(str[i])
+	max = NONE;
+	while(map)
 	{
-		if(!is_ws(str[i]))
-			real_size++;
-		i++;
+		if(map->line_len > max)
+			max = map->line_len;
+		map = map->next;
 	}
-	real = malloc(real_size + 1);
-	i = 0;
-	real_size = 0;
-	while(str[i])
-	{
-		if(!is_ws(str[i]))
-		{
-			real[real_size] = str[i];
-			real_size++;
-		}
-		i++;
-	}
-	real[real_size] = '\0';
-	return (real);
+	return (max);
 }
 
 t_map	*ft_lstnew_mapline(char *line)
@@ -49,7 +33,7 @@ t_map	*ft_lstnew_mapline(char *line)
 	new_node = malloc(sizeof(t_map));
 	if (!new_node)
 		return (NULL);
-	new_node->current_line = line_with_no_ws(line);
+	new_node->current_line = line;
 	new_node->line_len = ft_strlen(line);
 	new_node->next = NULL;
 	new_node->prev = NULL;
@@ -86,6 +70,19 @@ void	ft_lstaddback_mapline(t_map **head, t_map *new)
 	last->next = new;
 	new->prev = last;
 	
+}
+
+int		ft_lstsize_mapline(t_map *map)
+{
+	int i;
+
+	i = 0;
+	while(map)
+	{
+		i++;
+		map = map->next;
+	}
+	return (i);
 }
 
 void ft_lstiter_mapline(t_map *head)

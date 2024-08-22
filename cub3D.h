@@ -6,14 +6,14 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/16 21:36:34 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/20 15:56:52 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include <mlx.h>
+
 # include <fcntl.h>
 # include <limits.h>
 # include <stdlib.h>
@@ -21,8 +21,11 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include <limits.h>
+# include <math.h>
 
 # define NONE -1
+# define WIDTH 1280
+# define HEIGHT 920
 
 enum e_map_options
 {
@@ -31,8 +34,7 @@ enum e_map_options
 	SO,
 	WE,
 	EA,
-	F,
-	MAP
+	F
 };
 
 typedef struct	s_map
@@ -45,6 +47,12 @@ typedef struct	s_map
 
 typedef struct	s_cub3d
 {
+	void	*mlx;
+	void*	image;
+	void*	context;
+	int		width;
+	int		height;
+	double	delta_time;
 	char	*no_path;
 	char	*so_path;
 	char	*we_path;
@@ -56,6 +64,7 @@ typedef struct	s_cub3d
 	int		ceiling_g;
 	int		ceiling_b;
 	int		map_fd;
+	int		unit_size;
 	t_map	*map;
 } t_cub3d;
 
@@ -82,4 +91,6 @@ t_map	*ft_lstnew_mapline(char *line);
 t_map	*ft_lstlast_mapline(t_map *lst);
 void	ft_lstaddback_mapline(t_map **head, t_map *new);
 void	ft_lstiter_mapline(t_map *head);
+int		ft_lstsize_mapline(t_map *map);
+int		max_len(t_map *map);
 #endif

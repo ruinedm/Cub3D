@@ -6,14 +6,23 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/16 21:36:56 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/20 15:58:12 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
+#include "MLX42/include/MLX42/MLX42.h"
+void	initialize_mlx(t_cub3d *cube)
+{
+	cube->mlx = mlx_init(WIDTH, HEIGHT, "Ruined CUB3D\n", false);
+	if (!cube->mlx)
+		exit(EXIT_FAILURE);
+	// cube->image = mlx_new_image(cube->mlx, 
+}
 
 void	initialize_cube(t_cub3d *cube)
 {
+	initialize_mlx(cube);
 	cube->map_fd = NONE;
 	cube->ceiling_b = NONE;
 	cube->ceiling_r = NONE;
@@ -30,6 +39,7 @@ void	initialize_cube(t_cub3d *cube)
 
 int main(int ac, char **av)
 {
+	(void)av;
 	t_cub3d	cube;
 
 	if (ac != 2)
@@ -40,4 +50,5 @@ int main(int ac, char **av)
 	initialize_cube(&cube);
 	if (!parser(&cube, av[1]))
 		return (1);
+	mlx_loop(cube.mlx);
 }

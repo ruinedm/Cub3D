@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 16:25:15 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/16 23:27:00 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/22 16:45:20 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,10 +166,14 @@ bool is_valid_inner(t_map *map)
 					return (false);
 				found_player = true;
 			}
+			else if (line[i] != '1' && line[i] != '0')
+				return (false);
 			i++;
 		}
 		map = map->next;
 	}
+	if(!found_player)
+		return (false);
 	return (true);
 }
 
@@ -198,7 +202,6 @@ t_map *get_map(char *first_line, t_cub3d *cube)
 		ws_to_one(line);
 		current = ft_lstnew_mapline(line);
 		ft_lstaddback_mapline(&map, current);
-		free(line);
 	}
 	if (!is_valid_inner(map->next) || !is_valid_fl(current->current_line))
 		return (NULL);
@@ -242,6 +245,8 @@ int	parser(t_cub3d *cube, char *map_name)
 	int i;
 	int fd;
 	char *line;
+	int x_len;
+	int y_len;
 
 	line = NULL;
 	i = 0;
@@ -263,6 +268,11 @@ int	parser(t_cub3d *cube, char *map_name)
 		return (print_parsing_error("Missing parameter"), 0);
 	if (!cube->map)
 		return (print_parsing_error("Invalid or missing map"), 0);
+	x_len = max_len(cube->map);
+	y_len = ft_lstsize_mapline(cube->map);
+	cube->unit_size = roundf(fmin((float)WIDTH / (float)x_len, (float)HEIGHT / (float)y_len));
+	printf("X LEN: %i // Y LEN: %i\n", x_len, y_len);
+	printf("Normally: X: %f // Y : %f UNIT SIZE: %d\n", (float)WIDTH / (float)x_len, (float)HEIGHT / (float)y_len ,cube->unit_size);
 	printf("R: %i // G: %i // B: %i\n", cube->floor_r, cube->floor_g, cube->floor_b);
 	printf("R: %i // G: %i // B: %i\n", cube->ceiling_r, cube->ceiling_g, cube->ceiling_b);
 	printf("NO: %s\nEA: %s\nSO: %s\nWE: %s\n", cube->no_path, cube->ea_path, cube->so_path, cube->we_path);
