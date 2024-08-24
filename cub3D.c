@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/24 18:01:09 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/24 18:03:37 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	initialize_cube(t_cub3d *cube)
 	cube->we_path = NULL;
 }
 
-void draw_tile(t_cub3d *cube, int x, int y, int mode)
+void draw_tale(t_cub3d *cube, int x, int y, int mode)
 {
 	int i;
 	int j;
