@@ -6,7 +6,7 @@
 /*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/24 18:20:16 by aboukdid         ###   ########.fr       */
+/*   Updated: 2024/08/24 19:59:51 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,18 @@ enum e_map_params
 };
 
 
+typedef struct	s_player
+{
+	int x; // player position
+	int y; // player position
+	int angle; // player angle
+	int turn_direction; // player turn direction
+	int walk_direction; // player walk direction
+	int rotation; // player rotation
+	int speed; // player speed
+	int turn_speed; // player turn speed
+} t_player;
+
 typedef struct	s_map
 {
 	char			*current_line;
@@ -81,6 +93,7 @@ typedef struct	s_cub3d
 	int		x_len;
 	int		y_len;
 	t_map	*map;
+	t_player player;
 } t_cub3d;
 
 
