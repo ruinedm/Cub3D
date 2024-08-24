@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/24 22:38:14 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/25 00:26:47 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ void draw_circle(int cx, int cy, int r, void *img)
 {
     int x;
     int y = cy - r;
+    int l_x;
+    int l_y;
 
     while(y < cy + r)
     {
@@ -65,6 +67,14 @@ void draw_circle(int cx, int cy, int r, void *img)
             x++;
         }
         y++;
+    }
+    // LINE FACING UP -- FOR TESTING PURPOSES
+    l_x = cx;
+    l_y = cy - r;
+    while(l_y > cy - r - 100)
+    {
+        mlx_put_pixel(img, l_x, l_y, RED);
+        l_y--;
     }
 }
 
@@ -100,18 +110,15 @@ void draw_tile(t_cub3d *cube, int x, int y, int mode)
         }
         i++;
     }
-    if (is_a_player(mode))
-    {
-        draw_circle(scaled_x + TILE_SIZE / 2, scaled_y + TILE_SIZE / 2, 5, cube->image);
-    }
 }
 
 void render_map(t_cub3d *cube)
 {
     t_map *map = cube->map;
-
     int x = 0;
     int y = 0;
+    int player_x = 0;
+    int player_y = 0;
 
     while (map)
     {
@@ -119,11 +126,17 @@ void render_map(t_cub3d *cube)
         while (map->current_line[x])
         {
 			draw_tile(cube, x, y, map->current_line[x]);
+            if(!player_x && is_a_player(map->current_line[x]))
+            {
+                player_x = x;
+                player_y = y;
+            }
             x++;
         }
         y++;
         map = map->next;
     }
+    draw_circle(player_x * TILE_SIZE + TILE_SIZE / 2, player_y * TILE_SIZE + TILE_SIZE / 2, 5, cube->image);
 }
 
 int main(int ac, char **av)
