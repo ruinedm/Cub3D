@@ -3,49 +3,53 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/24 17:50:35 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/24 18:20:16 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
-
-
 # include <fcntl.h>
 # include <limits.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include <stdbool.h>
-# include <stdio.h>
+# include <stdbool.h> 
 # include <limits.h>
 # include <math.h>
+#include <stdio.h>
 
 # define NONE -1
 # define WIDTH 1280
 # define HEIGHT 920
 # define TILE_SIZE 32
-
+# define BLACK 0x000000FF
+# define WHITE 0xFFFFFFFF
+# define RED 0xFF0000FF
 
 enum e_parse_options
 {
-	C,
-	NO,
-	SO,
-	WE,
-	EA,
-	F
+    C,
+    NO,
+    SO,
+    WE,
+    EA,
+    F
 };
 
 
 enum e_map_params
 {
-	VOID = '0',
-	WALL = '1',
-	PLAYER,
+    VOID = '0',
+    WALL = '1',
+    PLAYER_E = 'E',
+    PLAYER_W = 'W',
+    PLAYER_N = 'N',
+    PLAYER_S = 'S'
 };
+
 
 typedef struct	s_map
 {

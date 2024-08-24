@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/24 18:03:37 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/24 18:19:30 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 #include "MLX42/include/MLX42/MLX42.h"
+
 void	initialize_mlx(t_cub3d *cube)
 {
 	cube->mlx = mlx_init(cube->width, cube->height, "Ruined CUB3D\n", false);
@@ -22,9 +23,6 @@ void	initialize_mlx(t_cub3d *cube)
 		exit(EXIT_FAILURE);
 	mlx_image_to_window(cube->mlx, cube->image, 0, 0);
 }
-
-
-
 
 void	initialize_cube(t_cub3d *cube)
 {
@@ -42,34 +40,37 @@ void	initialize_cube(t_cub3d *cube)
 	cube->we_path = NULL;
 }
 
-void draw_tale(t_cub3d *cube, int x, int y, int mode)
+void draw_tile(t_cub3d *cube, int x, int y, int mode)
 {
-	int i;
-	int j;
-	int scaled_x;
-	int scaled_y;
+    int i;
+    int j;
+    int scaled_x;
+    int scaled_y;
+    int color;
 
-	i = 0;
-	scaled_x = x * TILE_SIZE;
-	scaled_y = y * TILE_SIZE;
-	while (i < TILE_SIZE)
-	{
-		j = 0;
-		while (j < TILE_SIZE)
-		{
-			if (mode == WALL)
-				mlx_put_pixel(cube->image, scaled_x + i, scaled_y + j, 0x000000FF);
-			else if (mode == VOID)
-			{
-				if (!i || !j) // START OF A VOID TALE
-					mlx_put_pixel(cube->image, scaled_x + i, scaled_y + j, 0x000000FF);
-				else
-					mlx_put_pixel(cube->image, scaled_x + i, scaled_y + j, 0xFFFFFFFF);
-			}
-			j++;
-		}
-		i++;
-	}
+    scaled_x = x * TILE_SIZE;
+    scaled_y = y * TILE_SIZE;
+
+    if (mode == WALL)
+        color = BLACK;
+    else if (mode == VOID)
+        color = WHITE;
+    else if (mode == PLAYER_E || mode == PLAYER_N || mode == PLAYER_S || mode == PLAYER_W)
+       color = RED;
+    i = 0;
+    while (i < TILE_SIZE)
+    {
+        j = 0;
+        while (j < TILE_SIZE)
+        {
+            if (mode == VOID && (!i || !j))
+                mlx_put_pixel(cube->image, scaled_x + i, scaled_y + j, BLACK);
+            else
+                mlx_put_pixel(cube->image, scaled_x + i, scaled_y + j, color);
+            j++;
+        }
+        i++;
+    }
 }
 
 void render_map(t_cub3d *cube)
@@ -84,7 +85,7 @@ void render_map(t_cub3d *cube)
         x = 0;
         while (map->current_line[x])
         {
-			draw_tale(cube, x, y, map->current_line[x]);
+			draw_tile(cube, x, y, map->current_line[x]);
             x++;
         }
         y++;
