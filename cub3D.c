@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/24 20:19:05 by aboukdid         ###   ########.fr       */
+/*   Updated: 2024/08/24 22:02:32 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 #include "MLX42/include/MLX42/MLX42.h"
-#include <math.h>
-#define PI 3.14159265
 
 void	initialize_mlx(t_cub3d *cube)
 {
@@ -50,6 +48,31 @@ void	initialize_cube(t_cub3d *cube)
 }
 
 
+
+
+void draw_circle(int cx, int cy, int r, void *img)
+{
+    int x;
+    int y = cy - r;
+
+    while(y < cy + r)
+    {
+        x = cx - r;
+        while(x <= cx + r)
+        {
+            if ((x - cx) * (x - cx) + (y - cy) * (y - cy) <= r*r)
+                mlx_put_pixel(img, x, y, RED);
+            x++;
+        }
+        y++;
+    }
+}
+
+bool is_a_player(int mode)
+{
+    return (mode == PLAYER_E || mode == PLAYER_W || mode == PLAYER_N || mode == PLAYER_S);
+}
+
 void draw_tile(t_cub3d *cube, int x, int y, int mode)
 {
     int i;
@@ -60,12 +83,9 @@ void draw_tile(t_cub3d *cube, int x, int y, int mode)
     scaled_x = x * TILE_SIZE;
     scaled_y = y * TILE_SIZE;
 
+    color = WHITE;
     if (mode == WALL)
         color = BLACK;
-    else if (mode == PLAYER_E || mode == PLAYER_W || mode == PLAYER_N || mode == PLAYER_S)
-        color = WHITE;
-    else if (mode == VOID)
-        color = WHITE;
     i = 0;
     while (i < TILE_SIZE)
     {
@@ -80,9 +100,9 @@ void draw_tile(t_cub3d *cube, int x, int y, int mode)
         }
         i++;
     }
-    if (mode == PLAYER_E || mode == PLAYER_W || mode == PLAYER_N || mode == PLAYER_S)
+    if (is_a_player(mode))
     {
-        mlx_put_pixel(cube->image, scaled_x + TILE_SIZE / 2, scaled_y + TILE_SIZE / 2, RED);
+        draw_circle(scaled_x + TILE_SIZE / 2, scaled_y + TILE_SIZE / 2, 5, cube->image);
     }
 }
 
