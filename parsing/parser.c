@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 16:25:15 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/22 16:45:20 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/24 17:45:06 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,7 @@ t_map *get_map(char *first_line, t_cub3d *cube)
 	ws_to_one(first_line);
 	if(!is_valid_fl(first_line))
 		return (NULL);
-	map = ft_lstnew_mapline(first_line);
+	map = ft_lstnew_mapline(ft_strdup(first_line));
 	while ((line = get_next_line(cube->map_fd)))
 	{
 		ws_to_one(line);
@@ -205,6 +205,7 @@ t_map *get_map(char *first_line, t_cub3d *cube)
 	}
 	if (!is_valid_inner(map->next) || !is_valid_fl(current->current_line))
 		return (NULL);
+	
 	return (map);
 }
 
@@ -245,8 +246,6 @@ int	parser(t_cub3d *cube, char *map_name)
 	int i;
 	int fd;
 	char *line;
-	int x_len;
-	int y_len;
 
 	line = NULL;
 	i = 0;
@@ -268,14 +267,9 @@ int	parser(t_cub3d *cube, char *map_name)
 		return (print_parsing_error("Missing parameter"), 0);
 	if (!cube->map)
 		return (print_parsing_error("Invalid or missing map"), 0);
-	x_len = max_len(cube->map);
-	y_len = ft_lstsize_mapline(cube->map);
-	cube->unit_size = roundf(fmin((float)WIDTH / (float)x_len, (float)HEIGHT / (float)y_len));
-	printf("X LEN: %i // Y LEN: %i\n", x_len, y_len);
-	printf("Normally: X: %f // Y : %f UNIT SIZE: %d\n", (float)WIDTH / (float)x_len, (float)HEIGHT / (float)y_len ,cube->unit_size);
-	printf("R: %i // G: %i // B: %i\n", cube->floor_r, cube->floor_g, cube->floor_b);
-	printf("R: %i // G: %i // B: %i\n", cube->ceiling_r, cube->ceiling_g, cube->ceiling_b);
-	printf("NO: %s\nEA: %s\nSO: %s\nWE: %s\n", cube->no_path, cube->ea_path, cube->so_path, cube->we_path);
-	ft_lstiter_mapline(cube->map);
+	cube->x_len = max_len(cube->map);
+	cube->y_len = ft_lstsize_mapline(cube->map);
+	cube->width = cube->x_len * TILE_SIZE;
+	cube->height = cube->y_len * TILE_SIZE;
 	return (1);
 }

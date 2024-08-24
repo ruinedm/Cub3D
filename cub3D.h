@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/20 15:56:52 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/24 17:50:35 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@
 # define NONE -1
 # define WIDTH 1280
 # define HEIGHT 920
+# define TILE_SIZE 32
 
-enum e_map_options
+
+enum e_parse_options
 {
 	C,
 	NO,
@@ -35,6 +37,14 @@ enum e_map_options
 	WE,
 	EA,
 	F
+};
+
+
+enum e_map_params
+{
+	VOID = '0',
+	WALL = '1',
+	PLAYER,
 };
 
 typedef struct	s_map
@@ -64,7 +74,8 @@ typedef struct	s_cub3d
 	int		ceiling_g;
 	int		ceiling_b;
 	int		map_fd;
-	int		unit_size;
+	int		x_len;
+	int		y_len;
 	t_map	*map;
 } t_cub3d;
 
