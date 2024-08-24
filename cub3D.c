@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/24 22:02:32 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/24 22:38:14 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,9 @@ void draw_circle(int cx, int cy, int r, void *img)
     while(y < cy + r)
     {
         x = cx - r;
-        while(x <= cx + r)
+        while(x < cx + r)
         {
-            if ((x - cx) * (x - cx) + (y - cy) * (y - cy) <= r*r)
+            if ((x - cx) * (x - cx) + (y - cy) * (y - cy) < r * r)
                 mlx_put_pixel(img, x, y, RED);
             x++;
         }
