@@ -167,6 +167,24 @@ void render_map(t_cub3d *cube)
     draw_circle(cube);
 }
 
+bool collides_with_wall(t_cub3d *cube, int new_x, int new_y)
+{
+    int tile_x = new_x / TILE_SIZE;
+    int tile_y = new_y / TILE_SIZE;
+
+    t_map *map = cube->map;
+    int i = 0;
+    while(map && i < tile_y)
+    {
+        i++;
+        map = map->next;
+    }
+    if (map->current_line[tile_x] == '1')
+        return true;
+
+    return (false);
+}
+
 
 void    loop_hook(mlx_key_data_t key_data,  void *param)
 {
@@ -198,11 +216,17 @@ void    loop_hook(mlx_key_data_t key_data,  void *param)
             return;
     }
     step = cube->player.walk_direction * cube->player.movement_speed;
-    cube->player.x += step * cos(cube->player.rotation_angle);
-    cube->player.y += step * sin(cube->player.rotation_angle);
+    int new_x = cube->player.x + step * cos(cube->player.rotation_angle);
+    int new_y = cube->player.y + step * sin(cube->player.rotation_angle);
+    if (!collides_with_wall(cube, new_x, new_y))
+    {
+        cube->player.x = new_x;
+        cube->player.y = new_y;
+    }
     cube->player.rotation_angle += cube->player.turn_direction * cube->player.rotation_speed;
     render_map(cube);
 }
+
 int main(int ac, char **av)
 {
 	(void)av;
