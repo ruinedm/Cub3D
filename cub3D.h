@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/25 01:11:41 by aboukdid         ###   ########.fr       */
+/*   Updated: 2024/08/25 04:56:56 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ typedef struct	s_player
 	int angle;
 	int turn_direction;
 	int walk_direction;
-	int rotation;
-	int speed;
-	int turn_speed;
+	double rotation_angle;
+	int movement_speed;
+	double rotation_speed;
 } t_player;
 
 typedef struct	s_map
@@ -93,6 +93,7 @@ typedef struct	s_cub3d
 	int		map_fd;
 	int		x_len;
 	int		y_len;
+	bool	initial;
 	t_map	*map;
 	t_player player;
 } t_cub3d;
