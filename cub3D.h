@@ -6,7 +6,7 @@
 /*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/25 13:38:30 by aboukdid         ###   ########.fr       */
+/*   Updated: 2024/08/25 17:44:22 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <stdbool.h> 
 # include <limits.h>
 # include <math.h>
-#include <stdio.h>
+# include <stdio.h>
 
 # define NONE -1
 # define WIDTH 1280
@@ -28,94 +28,115 @@
 # define BLACK 0x000000FF
 # define WHITE 0xFFFFFFFF
 # define RED 0xFF0000FF
-#define PI 3.14159265
+# define PI 3.14159265
+
+# define FOV_ANGLE 60 * (PI / 180)
+# define NUM_RAYS WIDTH
 
 enum e_parse_options
 {
-    C,
-    NO,
-    SO,
-    WE,
-    EA,
-    F
+	C,
+	NO,
+	SO,
+	WE,
+	EA,
+	F
 };
-
 
 enum e_map_params
 {
-    VOID = '0',
-    WALL = '1',
-    PLAYER_E = 'E',
-    PLAYER_W = 'W',
-    PLAYER_N = 'N',
-    PLAYER_S = 'S'
+	VOID = '0',
+	WALL = '1',
+	PLAYER_E = 'E',
+	PLAYER_W = 'W',
+	PLAYER_N = 'N',
+	PLAYER_S = 'S'
 };
 
+typedef struct s_circle
+{
+	int	cx;
+	int	cy;
+	int	r;
+	int	x;
+	int	y;
+	int	l_x;
+	int	l_y;
+	int	r_squared;
+	int	final_x;
+	int	final_y;
+}	t_circle;
 
 typedef struct s_line
 {
-	float dx;
-	float dy;
-	int steps;
-	float x_inc;
-	float y_inc;
-	float x;
-	float y;
+	float	dx;
+	float	dy;
+	int		steps;
+	float	x_inc;
+	float	y_inc;
+	float	x;
+	float	y;
 }	t_line;
 
-typedef struct	s_player
+typedef struct s_ray
 {
-	int x;
-	int y;
-	int angle;
-	int turn_direction;
-	int walk_direction;
-	double rotation_angle;
-	int movement_speed;
-	double rotation_speed;
-} t_player;
+	double	ray_angle;
+	double	ray_x;
+	double	ray_y;
+	double	x_step;
+	double	y_step;
+}	t_ray;
 
-typedef struct	s_map
+typedef struct s_player
+{
+	int		x;
+	int		y;
+	int		angle;
+	int		turn_direction;
+	int		walk_direction;
+	double	rotation_angle;
+	int		movement_speed;
+	double	rotation_speed;
+}	t_player;
+
+typedef struct s_map
 {
 	char			*current_line;
 	int				line_len;
 	struct s_map	*prev;
 	struct s_map	*next;
-} t_map;
+}	t_map;
 
-typedef struct	s_cub3d
+typedef struct s_cub3d
 {
-	void	*mlx;
-	void*	image;
-	void*	context;
-	int		width;
-	int		height;
-	double	delta_time;
-	char	*no_path;
-	char	*so_path;
-	char	*we_path;
-	char	*ea_path;
-	int		floor_r;
-	int		floor_g;
-	int		floor_b;
-	int		ceiling_r;
-	int		ceiling_g;
-	int		ceiling_b;
-	int		map_fd;
-	int		x_len;
-	int		y_len;
-	bool	initial;
-	t_map	*map;
-	t_player player;
-} t_cub3d;
-
-
+	void		*mlx;
+	void		*image;
+	void		*context;
+	int			width;
+	int			height;
+	double		delta_time;
+	char		*no_path;
+	char		*so_path;
+	char		*we_path;
+	char		*ea_path;
+	int			floor_r;
+	int			floor_g;
+	int			floor_b;
+	int			ceiling_r;
+	int			ceiling_g;
+	int			ceiling_b;
+	int			map_fd;
+	int			x_len;
+	int			y_len;
+	bool		initial;
+	t_map		*map;
+	t_player	player;
+}	t_cub3d;
 
 // PARSING
 int		parser(t_cub3d *cube, char *map_name);
 void	print_parsing_error(char *str);
 char	*get_next_line(int fd);
-
 
 // UTILS
 size_t	ft_strlen(const char *s);
