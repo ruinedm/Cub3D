@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/25 04:56:56 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/25 13:38:30 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,17 @@ enum e_map_params
     PLAYER_S = 'S'
 };
 
+
+typedef struct s_line
+{
+	float dx;
+	float dy;
+	int steps;
+	float x_inc;
+	float y_inc;
+	float x;
+	float y;
+}	t_line;
 
 typedef struct	s_player
 {

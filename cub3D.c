@@ -45,40 +45,35 @@ void	initialize_cube(t_cub3d *cube)
     cube->player.turn_direction = 0;
     cube->player.walk_direction = 0;
     cube->player.rotation_angle = M_PI / 2;
-    cube->player.movement_speed = 3;
-    cube->player.rotation_speed = 6 * (M_PI / 180);
+    cube->player.movement_speed = 9;
+    cube->player.rotation_speed = 9 * (M_PI / 180);
 }
-// Bresenham's Algorithm ===> IMPLEMENT
+
 void draw_line(int start_x, int start_y, int end_x, int end_y, void *img)
 {
-    int dx = abs(end_x - start_x);
-    int dy = abs(end_y - start_y);
-    int sx = (start_x < end_x) ? 1 : -1;
-    int sy = (start_y < end_y) ? 1 : -1;
-    int err = dx - dy;
-    int x = start_x;
-    int y = start_y;
+    t_line line;
+    int i;
 
-    while (1)
+    i = 0;
+    line.dx = end_x - start_x;
+    line.dy = end_y - start_y;
+    if (fabs(line.dx) > fabs(line.dy))
+        line.steps = fabs(line.dx);
+    else
+        line.steps = fabs(line.dy);
+    line.x_inc = line.dx / line.steps;
+    line.y_inc = line.dy / line.steps;
+    line.x = start_x;
+    line.y = start_y;
+    while (i <= line.steps)
     {
-        mlx_put_pixel(img, x, y, RED);
-
-        if (x == end_x && y == end_y)
-            break;
-
-        int e2 = err * 2;
-        if (e2 > -dy)
-        {
-            err -= dy;
-            x += sx;
-        }
-        if (e2 < dx)
-        {
-            err += dx;
-            y += sy;
-        }
+        mlx_put_pixel(img, (int)line.x, (int)line.y, RED);
+        line.x += line.x_inc;
+        line.y += line.y_inc;
+        i++;
     }
 }
+
 void draw_circle(t_cub3d *cube)
 {
     int cx = cube->player.x;
