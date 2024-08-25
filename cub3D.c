@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/25 00:26:47 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/25 01:16:49 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void	initialize_cube(t_cub3d *cube)
 	cube->no_path = NULL;
 	cube->so_path = NULL;
 	cube->we_path = NULL;
+    cube->player.x = 0;
+    cube->player.y = 0;
     cube->player.angle = 0;
     cube->player.turn_direction = 0;
     cube->player.walk_direction = 0;
@@ -117,8 +119,6 @@ void render_map(t_cub3d *cube)
     t_map *map = cube->map;
     int x = 0;
     int y = 0;
-    int player_x = 0;
-    int player_y = 0;
 
     while (map)
     {
@@ -126,25 +126,65 @@ void render_map(t_cub3d *cube)
         while (map->current_line[x])
         {
 			draw_tile(cube, x, y, map->current_line[x]);
-            if(!player_x && is_a_player(map->current_line[x]))
+            if(!cube->player.x && is_a_player(map->current_line[x]))
             {
-                player_x = x;
-                player_y = y;
+                cube->player.x = x;
+                cube->player.y = y;
             }
             x++;
         }
         y++;
         map = map->next;
     }
-    draw_circle(player_x * TILE_SIZE + TILE_SIZE / 2, player_y * TILE_SIZE + TILE_SIZE / 2, 5, cube->image);
+    draw_circle(cube->player.x * TILE_SIZE + TILE_SIZE / 2, cube->player.y * TILE_SIZE + TILE_SIZE / 2, 5, cube->image);
 }
 
+void key_hook(mlx_key_data_t key_data, void *param)
+{
+    t_cub3d *cube = (t_cub3d *)param;
+    
+    if (key_data.action == MLX_PRESS || key_data.action == MLX_REPEAT)
+    {
+        if (key_data.key == MLX_KEY_W)
+            cube->player.walk_direction = 1;
+        else if (key_data.key == MLX_KEY_S)
+            cube->player.walk_direction = -1;
+        else if (key_data.key == MLX_KEY_A)
+            cube->player.turn_direction = -1;
+        else if (key_data.key == MLX_KEY_D)
+            cube->player.turn_direction = 1;
+        else if (key_data.key == MLX_KEY_ESCAPE)
+            exit(0);
+    }
+    if (key_data.action == MLX_RELEASE)
+    {
+        if (key_data.key == MLX_KEY_W || key_data.key == MLX_KEY_S)
+            cube->player.walk_direction = 0;
+        if (key_data.key == MLX_KEY_A || key_data.key == MLX_KEY_D)
+            cube->player.turn_direction = 0;
+    }
+}
+
+void update_player_position(t_cub3d *cube)
+{
+    double move_step = cube->player.walk_direction * cube->player.speed;
+    double new_x = cube->player.x + cos(cube->player.angle) * move_step;
+    double new_y = cube->player.y + sin(cube->player.angle) * move_step;
+    cube->player.x = new_x;
+    cube->player.y = new_y;
+    cube->player.angle += cube->player.turn_direction * cube->player.turn_speed;
+}
+
+void    loop_hook(void *param)
+{
+    t_cub3d *cube = (t_cub3d *)param;
+    update_player_position(cube);
+    render_map(cube);
+}
 int main(int ac, char **av)
 {
 	(void)av;
 	t_cub3d	cube;
-
-
 	if (ac != 2)
 	{
 		print_parsing_error("Invalid number of arguments");
@@ -155,5 +195,7 @@ int main(int ac, char **av)
 		return (1);
 	initialize_mlx(&cube);
 	render_map(&cube);
+    mlx_key_hook(cube.mlx, key_hook, &cube);
+    mlx_loop_hook(cube.mlx, loop_hook, &cube);
 	mlx_loop(cube.mlx);
 }

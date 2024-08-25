@@ -1,7 +1,7 @@
 CC = cc
 NAME = cub3D
 INCLUDE = cub3D.h
-FLAGS = -Wextra -Wall -Werror -Wunreachable-code -Ofast
+FLAGS = -Wunreachable-code -Ofast
 MLX_LIB = libmlx42.a -ldl /Users/$(shell whoami)/.brew/lib/libglfw3.a -pthread -lm  -framework Cocoa -framework IOKit -framework CoreFoundation
 HEADERS = -I ./MLX42/include
 OBJ_DIR = obj
