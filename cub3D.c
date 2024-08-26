@@ -6,13 +6,13 @@
 /*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/26 12:38:59 by aboukdid         ###   ########.fr       */
+/*   Updated: 2024/08/26 15:36:44 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 #include "MLX42/include/MLX42/MLX42.h"
-
+#include <limits.h>
 void	initialize_mlx(t_cub3d *cube)
 {
 	cube->mlx = mlx_init(cube->width, cube->height, "Ruined CUB3D\n", false);
@@ -156,16 +156,64 @@ bool	collides_with_wall(t_cub3d *cube, int new_x, int new_y)
 	return (false);
 }
 
+double normalize_angle(double angle)
+{
+    // Keep the angle in the range of 0 to 2 * M_PI
+    angle = fmod(angle, 2 * M_PI);
+    if (angle < 0)
+    {
+        angle += 2 * M_PI;
+    }
+    return angle;
+}
+
 void	render_ray(t_cub3d *cube, double ray_angle)
 {
-	double	ray_x;
-	double	ray_y;
-	double	ray_length;
-
-	ray_length = 30;
-	ray_x = cube->player.x + cos(ray_angle) * ray_length;
-	ray_y = cube->player.y + sin(ray_angle) * ray_length;
-	draw_line(cube->player.x, cube->player.y, ray_x, ray_y, cube->image);
+	ray_angle = normalize_angle(ray_angle);
+	double 	x_step;
+	double 	y_step;
+	double	x_intercept;
+	double	y_intercept;
+	int 	facing_down = ray_angle > 0 && ray_angle < M_PI;
+	int 	facing_up = !facing_down;
+	int 	facing_right = ray_angle < M_PI_2 || ray_angle > 3 * M_PI_2;
+	int 	facing_left = !facing_right;
+	double	next_ho_x;
+	double	next_ho_y;
+	bool	hit_wall = false;
+	double		wall_hit_x = 0;
+	double		wall_hit_y = 0;
+	
+	y_intercept = floor(cube->player.y / TILE_SIZE) * TILE_SIZE;
+	if (facing_down)
+		y_intercept += TILE_SIZE;
+	x_intercept = cube->player.x + (y_intercept - cube->player.y) / tan(ray_angle);
+	y_step = TILE_SIZE;
+	if (facing_up)
+		y_step *= -1;
+	x_step = TILE_SIZE / tan(ray_angle);
+	if ((facing_left && x_step > 0) || (facing_right && x_step < 0))
+		x_step *= -1;
+	next_ho_x = x_intercept;
+	next_ho_y = y_intercept;
+	if (facing_up)
+		next_ho_y--;
+	while (next_ho_x >= 0 && next_ho_x < cube->width && next_ho_y >= 0 && next_ho_y < cube->height)
+	{
+		if (collides_with_wall(cube, next_ho_x, next_ho_y))
+		{
+			hit_wall = true;
+			wall_hit_x = next_ho_x;
+			wall_hit_y = next_ho_y;
+			draw_line(cube->player.x, cube->player.y, wall_hit_x, wall_hit_y, cube->image);
+			break;
+		}
+		else
+		{
+			next_ho_x += x_step;
+			next_ho_y += y_step;
+		}
+	}
 }
 
 void	ray_casting(t_cub3d *cube)
@@ -209,7 +257,7 @@ void	render_map(t_cub3d *cube)
 		map = map->next;
 	}
 	draw_circle(cube);
-	ray_casting(cube);
+	// ray_casting(cube);
 }
 
 void	loop_hook(mlx_key_data_t key_data, void *param)
@@ -256,6 +304,7 @@ void	loop_hook(mlx_key_data_t key_data, void *param)
 		* cube->player.rotation_speed;
 	render_map(cube);
 }
+
 
 int	main(int ac, char **av)
 {
