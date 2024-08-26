@@ -6,7 +6,7 @@
 /*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/26 17:28:04 by aboukdid         ###   ########.fr       */
+/*   Updated: 2024/08/26 17:42:33 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,15 +78,6 @@ typedef struct s_line
 	float	y;
 }	t_line;
 
-typedef struct s_ray
-{
-	double	ray_angle;
-	double	ray_x;
-	double	ray_y;
-	double	x_step;
-	double	y_step;
-}	t_ray;
-
 typedef struct s_player
 {
 	int		x;
@@ -106,6 +97,30 @@ typedef struct s_map
 	struct s_map	*prev;
 	struct s_map	*next;
 }	t_map;
+
+typedef struct s_ray
+{
+	double	x_step;
+	double	y_step;
+	double	x_intercept;
+	double	y_intercept;
+	double	next_ho_x;
+	double	next_ho_y;
+	bool	hit_wall;
+	double	wall_hit_x;
+	double	wall_hit_y;
+	double	ho_distance;
+	double	ve_distance;
+	double	x_step_v;
+	double	y_step_v;
+	double	y_intercept_v;
+	double	x_intercept_v;
+	double	next_ve_x;
+	double	next_ve_y;
+	bool	hit_wall_v;
+	double	wall_hit_x_v;
+	double	wall_hit_y_v;
+}	t_ray;
 
 typedef struct s_cub3d
 {
