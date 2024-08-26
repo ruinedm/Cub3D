@@ -6,7 +6,7 @@
 /*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/25 18:08:42 by aboukdid         ###   ########.fr       */
+/*   Updated: 2024/08/26 12:38:59 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,32 +156,29 @@ bool	collides_with_wall(t_cub3d *cube, int new_x, int new_y)
 	return (false);
 }
 
+void	render_ray(t_cub3d *cube, double ray_angle)
+{
+	double	ray_x;
+	double	ray_y;
+	double	ray_length;
+
+	ray_length = 30;
+	ray_x = cube->player.x + cos(ray_angle) * ray_length;
+	ray_y = cube->player.y + sin(ray_angle) * ray_length;
+	draw_line(cube->player.x, cube->player.y, ray_x, ray_y, cube->image);
+}
+
 void	ray_casting(t_cub3d *cube)
 {
-	t_ray	ray;
+	double	ray_angle;
 	int		i;
 
-	ray.ray_angle = cube->player.rotation_angle - (FOV_ANGLE / 2);
+	ray_angle = cube->player.rotation_angle - (FOV_ANGLE / 2);
 	i = -1;
 	while (++i < NUM_RAYS)
 	{
-		ray.ray_x = cube->player.x;
-		ray.ray_y = cube->player.y;
-		ray.x_step = cos(ray.ray_angle);
-		ray.y_step = sin(ray.ray_angle);
-		while (ray.ray_x >= 0 && ray.ray_x < cube->width
-			&& ray.ray_y >= 0 && ray.ray_y < cube->height)
-		{
-			ray.ray_x += ray.x_step;
-			ray.ray_y += ray.y_step;
-			if (collides_with_wall(cube, ray.ray_x, ray.ray_y))
-			{
-				draw_line(cube->player.x, cube->player.y,
-					ray.ray_x, ray.ray_y, cube->image);
-				break ;
-			}
-		}
-		ray.ray_angle += FOV_ANGLE / NUM_RAYS;
+		render_ray(cube, ray_angle);
+		ray_angle += FOV_ANGLE / NUM_RAYS;
 	}
 }
 
