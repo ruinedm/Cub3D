@@ -6,7 +6,7 @@
 /*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/26 15:36:44 by aboukdid         ###   ########.fr       */
+/*   Updated: 2024/08/26 17:30:28 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,12 @@ double normalize_angle(double angle)
     return angle;
 }
 
+double	distance_between_points(t_cub3d *cube, double x, double y)
+{
+	return (sqrt((cube->player.x - x) * (cube->player.x - x)
+		+ (cube->player.y - y) * (cube->player.y - y)));
+}
+
 void	render_ray(t_cub3d *cube, double ray_angle)
 {
 	ray_angle = normalize_angle(ray_angle);
@@ -181,8 +187,10 @@ void	render_ray(t_cub3d *cube, double ray_angle)
 	double	next_ho_x;
 	double	next_ho_y;
 	bool	hit_wall = false;
-	double		wall_hit_x = 0;
-	double		wall_hit_y = 0;
+	double	wall_hit_x = 0;
+	double	wall_hit_y = 0;
+	double ho_distance;
+	double ve_distance;
 	
 	y_intercept = floor(cube->player.y / TILE_SIZE) * TILE_SIZE;
 	if (facing_down)
@@ -205,7 +213,6 @@ void	render_ray(t_cub3d *cube, double ray_angle)
 			hit_wall = true;
 			wall_hit_x = next_ho_x;
 			wall_hit_y = next_ho_y;
-			draw_line(cube->player.x, cube->player.y, wall_hit_x, wall_hit_y, cube->image);
 			break;
 		}
 		else
@@ -214,6 +221,58 @@ void	render_ray(t_cub3d *cube, double ray_angle)
 			next_ho_y += y_step;
 		}
 	}
+	double 	x_step_v;
+	double 	y_step_v;
+	double	x_intercept_v;
+	double	y_intercept_v;
+	double	next_ve_x;
+	double	next_ve_y;
+	bool	hit_wall_v = false;
+	double	wall_hit_x_v = 0;
+	double	wall_hit_y_v = 0;
+
+	x_intercept_v = floor(cube->player.x / TILE_SIZE) * TILE_SIZE;
+	if (facing_right)
+		x_intercept_v += TILE_SIZE;
+	y_intercept_v = cube->player.y + (x_intercept_v - cube->player.x) * tan(ray_angle);
+	x_step_v = TILE_SIZE;
+	if (facing_left)
+		x_step_v *= -1;
+	y_step_v = TILE_SIZE * tan(ray_angle);
+	if ((facing_up && y_step_v > 0) || (facing_down && y_step_v < 0))
+		y_step_v *= -1;
+	next_ve_x = x_intercept_v;
+	next_ve_y = y_intercept_v;
+	if (facing_left)
+		next_ve_x--;
+	while (next_ve_x >= 0 && next_ve_x < cube->width && next_ve_y >= 0 && next_ve_y < cube->height)
+	{
+		if (collides_with_wall(cube, next_ve_x, next_ve_y))
+		{
+			hit_wall_v = true;
+			wall_hit_x_v = next_ve_x;
+			wall_hit_y_v = next_ve_y;
+			break;
+		}
+		else
+		{
+			next_ve_x += x_step_v;
+			next_ve_y += y_step_v;
+		}
+	}
+	if (hit_wall)
+		ho_distance = distance_between_points(cube, wall_hit_x, wall_hit_y);
+	else
+		ho_distance = INT_MAX;
+	
+	if (hit_wall_v)
+		ve_distance = distance_between_points(cube, wall_hit_x_v, wall_hit_y_v);
+	else
+		ve_distance = INT_MAX;
+	if (ho_distance < ve_distance)
+		draw_line(cube->player.x, cube->player.y, wall_hit_x, wall_hit_y, cube->image);
+	else
+		draw_line(cube->player.x, cube->player.y, wall_hit_x_v, wall_hit_y_v, cube->image);
 }
 
 void	ray_casting(t_cub3d *cube)
@@ -257,7 +316,7 @@ void	render_map(t_cub3d *cube)
 		map = map->next;
 	}
 	draw_circle(cube);
-	// ray_casting(cube);
+	ray_casting(cube);
 }
 
 void	loop_hook(mlx_key_data_t key_data, void *param)
