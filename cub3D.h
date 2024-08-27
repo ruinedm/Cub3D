@@ -6,7 +6,7 @@
 /*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/25 17:44:22 by aboukdid         ###   ########.fr       */
+/*   Updated: 2024/08/27 14:50:59 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,15 +78,6 @@ typedef struct s_line
 	float	y;
 }	t_line;
 
-typedef struct s_ray
-{
-	double	ray_angle;
-	double	ray_x;
-	double	ray_y;
-	double	x_step;
-	double	y_step;
-}	t_ray;
-
 typedef struct s_player
 {
 	int		x;
@@ -106,6 +97,45 @@ typedef struct s_map
 	struct s_map	*prev;
 	struct s_map	*next;
 }	t_map;
+
+typedef struct s_ho_ray
+{
+	double	x_intercept;
+	double	y_intercept;
+	double	x_step;
+	double	y_step;
+	double	next_ho_x;
+	double	next_ho_y;
+	int		facing_down;
+	int		facing_up;
+	int		facing_left;
+}	t_ho_ray;
+
+typedef struct s_ve_ray
+{
+	double	x_intercept;
+	double	y_intercept;
+	double	x_step;
+	double	y_step;
+	double	next_ve_x;
+	double	next_ve_y;
+	int		facing_right;
+	int		facing_left;
+	int		facing_up;
+}	t_ve_ray;
+
+typedef struct s_ray
+{
+	double ho_wall_hit_x;
+	double ho_wall_hit_y;
+	double ve_wall_hit_x;
+	double ve_wall_hit_y;
+	bool hit_ho;
+	bool	hit_ver;
+	double	ho_distance;
+	double ve_distance;
+	
+}	t_ray;
 
 typedef struct s_cub3d
 {

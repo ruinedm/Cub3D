@@ -3,15 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/25 18:08:42 by aboukdid         ###   ########.fr       */
+/*   Updated: 2024/08/27 18:01:14 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 #include "MLX42/include/MLX42/MLX42.h"
+#include <limits.h>
+#include <string.h>
 
 void	initialize_mlx(t_cub3d *cube)
 {
@@ -135,6 +137,20 @@ void	draw_tile(t_cub3d *cube, int x, int y, int mode)
 	}
 }
 
+double	normalize_angle(double angle)
+{
+	angle = fmod(angle, 2 * M_PI);
+	if (angle < 0)
+		angle += 2 * M_PI;
+	return (angle);
+}
+
+double	distance(t_cub3d *cube, double x, double y)
+{
+	return (sqrt((cube->player.x - x) * (cube->player.x - x)
+			+ (cube->player.y - y) * (cube->player.y - y)));
+}
+
 bool	collides_with_wall(t_cub3d *cube, int new_x, int new_y)
 {
 	int		tile_x;
@@ -146,6 +162,8 @@ bool	collides_with_wall(t_cub3d *cube, int new_x, int new_y)
 	tile_y = new_y / TILE_SIZE;
 	map = cube->map;
 	i = 0;
+    if (new_x < 0 || new_x >= cube->width || new_y < 0 || new_y >= cube->height)
+		return (true);
 	while (map && i < tile_y)
 	{
 		i++;
@@ -156,32 +174,106 @@ bool	collides_with_wall(t_cub3d *cube, int new_x, int new_y)
 	return (false);
 }
 
-void	ray_casting(t_cub3d *cube)
+bool	ho_inter(t_cub3d *cube, double ray_angle, double *wall_hit_x, double *wall_hit_y)
+{
+	t_ho_ray	ray;
+
+	ray.facing_down = ray_angle > 0 && ray_angle < M_PI;
+	ray.facing_up = !ray.facing_down;
+	ray.facing_left = ray_angle > M_PI_2 && ray_angle < 3 * M_PI_2;
+	ray.y_intercept = floor(cube->player.y / TILE_SIZE) * TILE_SIZE;
+	if (ray.facing_down)
+		ray.y_intercept += TILE_SIZE;
+	ray.x_intercept = cube->player.x + (ray.y_intercept - cube->player.y) / tan(ray_angle);
+	ray.y_step = TILE_SIZE;
+	if (ray.facing_up)
+		ray.y_step *= -1;
+	ray.x_step = TILE_SIZE / tan(ray_angle);
+	if ((ray.facing_left && ray.x_step > 0) || (!ray.facing_left && ray.x_step < 0))
+		ray.x_step *= -1;
+	ray.next_ho_x = ray.x_intercept;
+	ray.next_ho_y = ray.y_intercept;
+	while (ray.next_ho_x >= 0 && ray.next_ho_x < cube->width && ray.next_ho_y >= 0 && ray.next_ho_y <= cube->height)
+	{
+		if (collides_with_wall(cube, ray.next_ho_x, ray.next_ho_y - (ray.facing_up ? 1 : 0)))
+		{
+			*wall_hit_x = ray.next_ho_x;
+			*wall_hit_y = ray.next_ho_y;
+			return (true);
+		}
+		ray.next_ho_x += ray.x_step;
+		ray.next_ho_y += ray.y_step;
+	}
+	return (false);
+}
+
+bool	ve_inter(t_cub3d *cube, double ray_angle, double *wall_hit_x, double *wall_hit_y)
+{
+	t_ve_ray	ray;
+
+	ray.facing_right = ray_angle < M_PI_2 || ray_angle > 3 * M_PI_2;
+	ray.facing_left = !ray.facing_right;
+	ray.facing_up = ray_angle > M_PI && ray_angle < 2 * M_PI;
+	ray.x_intercept = floor(cube->player.x / TILE_SIZE) * TILE_SIZE;
+	if (ray.facing_right)
+		ray.x_intercept += TILE_SIZE;
+	ray.y_intercept = cube->player.y + (ray.x_intercept - cube->player.x) * tan(ray_angle);
+	ray.x_step = TILE_SIZE;
+	if (ray.facing_left)
+		ray.x_step *= -1;
+	ray.y_step = TILE_SIZE * tan(ray_angle);
+	if ((ray.facing_up && ray.y_step > 0) || (!ray.facing_up && ray.y_step < 0))
+		ray.y_step *= -1;
+	ray.next_ve_x = ray.x_intercept;
+	ray.next_ve_y = ray.y_intercept;
+	while (ray.next_ve_x >= 0 && ray.next_ve_x < cube->width && ray.next_ve_y >= 0 && ray.next_ve_y <= cube->height)
+	{
+		if (collides_with_wall(cube, ray.next_ve_x - (ray.facing_left ? 1 : 0), ray.next_ve_y))
+		{
+			*wall_hit_x = ray.next_ve_x;
+			*wall_hit_y = ray.next_ve_y;
+			return (true);
+		}
+		ray.next_ve_x += ray.x_step;
+		ray.next_ve_y += ray.y_step;
+	}
+	return (false);
+}
+
+void	render_ray(t_cub3d *cube, double ray_angle)
 {
 	t_ray	ray;
+
+	ray_angle = normalize_angle(ray_angle);
+	ray.hit_ho = ho_inter(cube, ray_angle, &ray.ho_wall_hit_x, &ray.ho_wall_hit_y);
+	ray.hit_ver = ve_inter(cube, ray_angle, &ray.ve_wall_hit_x, &ray.ve_wall_hit_y);
+	if (ray.hit_ho)
+		ray.ho_distance = distance(cube, ray.ho_wall_hit_x, ray.ho_wall_hit_y);
+	else
+		ray.ho_distance = INT_MAX;
+	if (ray.hit_ver)
+		ray.ve_distance = distance(cube, ray.ve_wall_hit_x, ray.ve_wall_hit_y);
+	else
+		ray.ve_distance = INT_MAX;
+	if (ray.ho_distance < ray.ve_distance)
+		draw_line(cube->player.x, cube->player.y, ray.ho_wall_hit_x, ray.ho_wall_hit_y, cube->image);
+	else
+		draw_line(cube->player.x, cube->player.y, ray.ve_wall_hit_x, ray.ve_wall_hit_y, cube->image);
+}
+
+void	ray_casting(t_cub3d *cube)
+{
+	double	ray_angle;
 	int		i;
 
-	ray.ray_angle = cube->player.rotation_angle - (FOV_ANGLE / 2);
-	i = -1;
-	while (++i < NUM_RAYS)
+	ray_angle = cube->player.rotation_angle - (FOV_ANGLE / 2);
+	ray_angle = normalize_angle(cube->player.rotation_angle - (FOV_ANGLE / 2));
+	i = 0;
+	while (i < cube->width)
 	{
-		ray.ray_x = cube->player.x;
-		ray.ray_y = cube->player.y;
-		ray.x_step = cos(ray.ray_angle);
-		ray.y_step = sin(ray.ray_angle);
-		while (ray.ray_x >= 0 && ray.ray_x < cube->width
-			&& ray.ray_y >= 0 && ray.ray_y < cube->height)
-		{
-			ray.ray_x += ray.x_step;
-			ray.ray_y += ray.y_step;
-			if (collides_with_wall(cube, ray.ray_x, ray.ray_y))
-			{
-				draw_line(cube->player.x, cube->player.y,
-					ray.ray_x, ray.ray_y, cube->image);
-				break ;
-			}
-		}
-		ray.ray_angle += FOV_ANGLE / NUM_RAYS;
+		render_ray(cube, ray_angle);
+		ray_angle += FOV_ANGLE / cube->width;
+		i++;
 	}
 }
 
