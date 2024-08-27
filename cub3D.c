@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/27 18:01:14 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/28 00:03:52 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,32 +50,25 @@ void	initialize_cube(t_cub3d *cube)
 	cube->player.movement_speed = 9;
 	cube->player.rotation_speed = 9 * (M_PI / 180);
 }
-
-void	draw_line(int start_x, int start_y, int end_x, int end_y, void *img)
+// AHSAN FUNCTION F DNYA LAY3TIK SE7A
+void    draw_line(t_cub3d *cube, double x0, double y0, double x1, double y1, uint32_t color)
 {
-	t_line	line;
-	int		i;
+    double delta_x = x1 - x0;
+    double delta_y = y1 - y0;
+    int pixels = sqrt((delta_x * delta_x) + (delta_y * delta_y));
+    double pixel_x = x0;
+    double pixel_y = y0;
 
-	i = 0;
-	line.dx = end_x - start_x;
-	line.dy = end_y - start_y;
-	if (fabs(line.dx) > fabs(line.dy))
-		line.steps = fabs(line.dx);
-	else
-		line.steps = fabs(line.dy);
-	line.x_inc = line.dx / line.steps;
-	line.y_inc = line.dy / line.steps;
-	line.x = start_x;
-	line.y = start_y;
-	while (i <= line.steps)
-	{
-		mlx_put_pixel(img, (int)line.x, (int)line.y, RED);
-		line.x += line.x_inc;
-		line.y += line.y_inc;
-		i++;
-	}
+    double x_inc = delta_x / pixels;
+    double y_inc = delta_y / pixels;
+
+    for (int i = 0; i < pixels; i++)
+    {
+        mlx_put_pixel(cube->image, (int)pixel_x, (int)pixel_y, color);
+        pixel_x += x_inc;
+        pixel_y += y_inc;
+    }
 }
-
 void	draw_circle(t_cub3d *cube)
 {
 	t_circle	cir;
@@ -97,9 +90,6 @@ void	draw_circle(t_cub3d *cube)
 		}
 		cir.y++;
 	}
-	cir.final_x = cir.cx + cos(cube->player.rotation_angle) * 30;
-	cir.final_y = cir.cy + sin(cube->player.rotation_angle) * 30;
-	draw_line(cir.cx, cir.cy, cir.final_x, cir.final_y, cube->image);
 }
 
 bool	is_a_player(int mode)
@@ -256,9 +246,9 @@ void	render_ray(t_cub3d *cube, double ray_angle)
 	else
 		ray.ve_distance = INT_MAX;
 	if (ray.ho_distance < ray.ve_distance)
-		draw_line(cube->player.x, cube->player.y, ray.ho_wall_hit_x, ray.ho_wall_hit_y, cube->image);
+		draw_line(cube, cube->player.x, cube->player.y, ray.ho_wall_hit_x, ray.ho_wall_hit_y, RED);
 	else
-		draw_line(cube->player.x, cube->player.y, ray.ve_wall_hit_x, ray.ve_wall_hit_y, cube->image);
+		draw_line(cube, cube->player.x, cube->player.y, ray.ve_wall_hit_x, ray.ve_wall_hit_y, RED);
 }
 
 void	ray_casting(t_cub3d *cube)
