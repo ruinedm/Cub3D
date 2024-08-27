@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/27 15:24:55 by aboukdid         ###   ########.fr       */
+/*   Updated: 2024/08/27 18:01:14 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,11 +268,12 @@ void	ray_casting(t_cub3d *cube)
 
 	ray_angle = cube->player.rotation_angle - (FOV_ANGLE / 2);
 	ray_angle = normalize_angle(cube->player.rotation_angle - (FOV_ANGLE / 2));
-	i = -1;
-	while (++i < NUM_RAYS)
+	i = 0;
+	while (i < cube->width)
 	{
 		render_ray(cube, ray_angle);
-		ray_angle += FOV_ANGLE / NUM_RAYS;
+		ray_angle += FOV_ANGLE / cube->width;
+		i++;
 	}
 }
 
