@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/28 03:27:07 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/28 05:55:14 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ void	initialize_cube(t_cub3d *cube)
 	cube->player.rotation_angle = M_PI / 2;
 	cube->player.movement_speed = 9;
 	cube->player.rotation_speed = 9 * (M_PI / 180);
+	cube->strip_color = RED;
+	cube->max_render_distance = sqrt((cube->width - 1) * (cube->width - 1) + (cube->height - 1) * (cube->height - 1));
 }
 // AHSAN FUNCTION F DNYA LAY3TIK SE7A
 void    draw_line(t_cub3d *cube, double x0, double y0, double x1, double y1, uint32_t color)
@@ -238,7 +240,7 @@ bool	ve_inter(t_cub3d *cube, double ray_angle, double *wall_hit_x, double *wall_
 	return (false);
 }
 
-void	draw_rectangle(int start_x, int start_y, int width, int height, void *img)
+void	draw_rectangle(int start_x, int start_y, int width, int height, t_cub3d *cube)
 {
 	int real_height;
 	int real_width;
@@ -251,16 +253,30 @@ void	draw_rectangle(int start_x, int start_y, int width, int height, void *img)
 	y = start_y;
 	while(y < real_height)
 	{
+		if (y < 0 || y >= cube->height)
+			return;
 		x = start_x;
 		while(x < real_width)
 		{
-			mlx_put_pixel(img, x, y, RED);
+			if (x < 0 || x >= cube->width)
+				return;
+			mlx_put_pixel(cube->image, x, y, cube->strip_color);
 			x++;
 		}
 		y++;
 	}
 }
+int	create_trgb(unsigned char t, unsigned char r, unsigned char g,
+		unsigned char b)
+{
+	unsigned char	trgb[4];
 
+	trgb[0] = t;
+	trgb[1] = r;
+	trgb[2] = g;
+	trgb[3] = b;
+	return (*(int *)trgb);
+}
 void	render_ray(t_cub3d *cube, double ray_angle, int i)
 {
 	t_ray	ray;
@@ -281,23 +297,13 @@ void	render_ray(t_cub3d *cube, double ray_angle, int i)
 		ray.ray_distance = ray.ho_distance;
 	else
 		ray.ray_distance = ray.ve_distance;
-	wall_strip_height = TILE_SIZE * cube->player.projection_plane_distance / (ray.ray_distance);
-	draw_rectangle(i, cube->height / 2 - wall_strip_height / 2, 1, wall_strip_height, cube->image);
-	t_map *map = cube->map;
-	int x = 0;
-	int y = 0;
-	while (map)
-	{
-		x = 0;
-		while (map->current_line[x])
-		{
-			draw_tile(cube, x, y, map->current_line[x]);
-			x++;
-		}
-		y++;
-		map = map->next;
-	}
-	draw_circle(cube);
+	double ray_angle_diff = normalize_angle(ray_angle - cube->player.rotation_angle);
+    double corrected_distance = ray.ray_distance * cos(ray_angle_diff);
+	wall_strip_height = TILE_SIZE * cube->player.projection_plane_distance / (corrected_distance);
+    double transparency = 25000.0 / corrected_distance;
+    transparency = fmin(fmax(transparency, 0.0), 255.0);
+    cube->strip_color = create_trgb((unsigned char)transparency, 255, 255, 255);
+	draw_rectangle(i, cube->height / 2 - wall_strip_height / 2, 1, wall_strip_height, cube);
 }
 
 void	ray_casting(t_cub3d *cube)

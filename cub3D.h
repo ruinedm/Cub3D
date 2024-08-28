@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/28 02:25:28 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/28 05:12:26 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,8 @@ typedef struct s_cub3d
 	int			map_fd;
 	int			x_len;
 	int			y_len;
+	int			strip_color;
+	int			max_render_distance;
 	bool		initial;
 	t_map		*map;
 	t_player	player;
@@ -186,4 +188,8 @@ void	ft_lstaddback_mapline(t_map **head, t_map *new);
 void	ft_lstiter_mapline(t_map *head);
 int		ft_lstsize_mapline(t_map *map);
 int		max_len(t_map *map);
+int		darken_color(int color, double distance, int max_distance);
+
+int	create_trgb(unsigned char t, unsigned char r, unsigned char g,
+		unsigned char b);
 #endif

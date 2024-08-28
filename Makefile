@@ -20,7 +20,7 @@ $(OBJ_DIR)/%.o: %.c $(INCLUDE) | $(OBJ_DIR)
 	@echo "Compiled $<"
 
 $(NAME): $(OBJ)
-	@$(CC) $(LINK_OBJ) $(HEADERS) $(MLX_LIB) -o $(NAME)
+	@$(CC) $(LINK_OBJ) -g $(HEADERS) $(MLX_LIB) -o $(NAME)
 	@echo "Mandatory executable linked successfully!"
 
 $(OBJ_DIR):
