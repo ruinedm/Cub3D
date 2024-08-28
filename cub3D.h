@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/28 22:17:57 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/29 00:54:49 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdbool.h> 
 # include <math.h>
 # include <stdio.h>
+# include "MLX42/include/MLX42/MLX42.h"
 
 # define NONE -1
 # define WIDTH 1280
@@ -68,13 +69,13 @@ typedef struct s_circle
 
 typedef struct s_line
 {
-	float	dx;
-	float	dy;
-	int		steps;
-	float	x_inc;
-	float	y_inc;
-	float	x;
-	float	y;
+	double	delta_x;
+	double	delta_y;
+	int		pixels;
+	double	pixel_x;
+	double	pixel_y;
+	double	x_inc;
+	double	y_inc;
 }	t_line;
 
 typedef struct s_player
@@ -87,7 +88,7 @@ typedef struct s_player
 	double	rotation_angle;
 	int		movement_speed;
 	double	rotation_speed;
-	int		projection_plane_distance;
+	int		pp_distance;
 }	t_player;
 
 typedef struct s_map
@@ -126,15 +127,15 @@ typedef struct s_ve_ray
 
 typedef struct s_ray
 {
-	double ho_wall_hit_x;
-	double ho_wall_hit_y;
-	double ve_wall_hit_x;
-	double ve_wall_hit_y;
-	bool hit_ho;
+	double	ho_wall_hit_x;
+	double	ho_wall_hit_y;
+	double	ve_wall_hit_x;
+	double	ve_wall_hit_y;
+	bool	hit_ho;
 	bool	hit_ver;
 	double	ho_distance;
-	double ve_distance;
-	double ray_distance;
+	double	ve_distance;
+	double	ray_distance;
 }	t_ray;
 
 typedef struct s_cub3d
@@ -168,9 +169,12 @@ typedef struct s_cub3d
 
 // PARSING
 int		parser(t_cub3d *cube, char *map_name);
-void	print_parsing_error(char *str);
+void	prin_err(char *str);
 char	*get_next_line(int fd);
-
+bool	is_valid_inner(t_map *map, int *player_direction);
+bool	set_color(char *str, t_cub3d *cube, int c_type);
+bool	set_textures(char *str, t_cub3d *cube, int texture);
+bool	do_i_exist(t_cub3d *cube, int type);
 // UTILS
 size_t	ft_strlen(const char *s);
 void	ft_putstr_fd(int fd, char *str);
@@ -188,7 +192,23 @@ void	ft_lstaddback_mapline(t_map **head, t_map *new);
 void	ft_lstiter_mapline(t_map *head);
 int		ft_lstsize_mapline(t_map *map);
 int		max_len(t_map *map);
+int		create_trgb(unsigned char t, unsigned char r, unsigned char g,
+			unsigned char b);
+void	draw_line(t_cub3d *cube, double x0, double y0,
+			double x1, double y1, uint32_t color);
+void	draw_circle(t_cub3d *cube);
+void	draw_tile(t_cub3d *cube, int x, int y, int mode);
+void	draw_rectangle(int start_x, int start_y,
+			int width, int height, t_cub3d *cube);
+void	ray_casting(t_cub3d *cube);
+void	render_ray(t_cub3d *cube, double ray_angle, int i);
+bool	ve_inter(t_cub3d *cube, double ray_angle,
+			double *wall_hit_x, double *wall_hit_y);
+bool	ho_inter(t_cub3d *cube, double ray_angle,
+			double *wall_hit_x, double *wall_hit_y);
+double	normalize_angle(double angle);
+double	distance(t_cub3d *cube, double x, double y);
+bool	collides_with_wall(t_cub3d *cube, int new_x, int new_y);
+bool	is_a_player(int mode);
 
-int	create_trgb(unsigned char t, unsigned char r, unsigned char g,
-		unsigned char b);
 #endif

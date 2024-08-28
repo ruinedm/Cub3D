@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 11:28:26 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/24 01:18:39 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/29 00:33:32 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3D.h"
 
-# define BUFFER_SIZE 42
-
+#define BUFFER_SIZE 42
 
 char	*append_buffer(char **ptr_to_save, char *buffer, int bytes_read)
 {
