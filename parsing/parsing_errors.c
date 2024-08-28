@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_errors.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 16:27:59 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/25 03:10:17 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/29 00:54:49 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3D.h"
 
-
-void	print_parsing_error(char *str)
+void	prin_err(char *str)
 {
 	ft_putstr_fd(2, "Error\n");
 	if (str)
@@ -24,7 +23,8 @@ void	print_parsing_error(char *str)
 	else
 		perror("");
 	ft_putstr_fd(2, "Expected input:\n./cub3D {config_file}.cub\n");
-	ft_putstr_fd(2, "Make sure the file exists and you have read permissions.\n");
+	ft_putstr_fd(2, "Make sure the file ");
+	ft_putstr_fd(2, "exists and you have read permissions.\n");
 	ft_putstr_fd(2, "The config should be valid according to the ");
 	ft_putstr_fd(2, "subject's rules.\n");
 }

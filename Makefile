@@ -6,8 +6,8 @@ MLX_LIB = libmlx42.a -ldl /Users/$(shell whoami)/.brew/lib/libglfw3.a -pthread -
 HEADERS = -I ./MLX42/include
 OBJ_DIR = obj
 
-SRC = cub3D.c \
-      parsing/parser.c parsing/parsing_errors.c \
+SRC = cub3D.c  draw.c ray.c math.c\
+      parsing/parser.c parsing/parsing_errors.c  parsing/parsser_helper.c\
       get_next_line/get_next_line.c \
       utils/printing_utils.c utils/string_utils.c utils/string_utils2.c utils/ft_atoi.c utils/ll_utils.c
 
