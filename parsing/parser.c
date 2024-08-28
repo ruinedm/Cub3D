@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 16:25:15 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/28 01:18:29 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/28 22:12:34 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ bool is_valid_fl(char *line)
 	return (true);
 }
 
-bool is_valid_inner(t_map *map)
+bool is_valid_inner(t_map *map, int *player_direction)
 {
 	char *line;
 	bool found_player;
@@ -164,6 +164,7 @@ bool is_valid_inner(t_map *map)
 			{
 				if (found_player)
 					return (false);
+				*player_direction = line[i];
 				found_player = true;
 			}
 			else if (line[i] != '1' && line[i] != '0')
@@ -203,7 +204,7 @@ t_map *get_map(char *first_line, t_cub3d *cube)
 		current = ft_lstnew_mapline(line);
 		ft_lstaddback_mapline(&map, current);
 	}
-	if (!is_valid_inner(map->next) || !is_valid_fl(current->current_line))
+	if (!is_valid_inner(map->next, &(cube->player_direction)) || !is_valid_fl(current->current_line))
 		return (NULL);
 	
 	return (map);
@@ -272,5 +273,6 @@ int	parser(t_cub3d *cube, char *map_name)
 	cube->width = cube->x_len * TILE_SIZE;
 	cube->height = cube->y_len * TILE_SIZE;
 	cube->player.projection_plane_distance = cube->width / (2 * tan(FOV_ANGLE / 2));
+	close(fd);
 	return (1);
 }

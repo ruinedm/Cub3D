@@ -6,17 +6,23 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/28 05:55:14 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/28 23:23:28 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 #include "MLX42/include/MLX42/MLX42.h"
-#include <limits.h>
-#include <string.h>
 
 void	initialize_mlx(t_cub3d *cube)
 {
+	if(cube->player_direction == PLAYER_S)
+		cube->player.rotation_angle = M_PI_2;
+	else if (cube->player_direction == PLAYER_N)
+		cube->player.rotation_angle = 3 * M_PI / 2;
+	else if (cube->player_direction == PLAYER_W)
+		cube->player.rotation_angle = M_PI;
+	else if (cube->player_direction == PLAYER_E)
+		cube->player.rotation_angle = 0;
 	cube->mlx = mlx_init(cube->width, cube->height, "Ruined CUB3D\n", false);
 	if (!cube->mlx)
 		exit(EXIT_FAILURE);
@@ -46,9 +52,9 @@ void	initialize_cube(t_cub3d *cube)
 	cube->player.angle = 0;
 	cube->player.turn_direction = 0;
 	cube->player.walk_direction = 0;
-	cube->player.rotation_angle = M_PI / 2;
 	cube->player.movement_speed = 9;
 	cube->player.rotation_speed = 9 * (M_PI / 180);
+	cube->player_direction = NONE;
 	cube->strip_color = RED;
 	cube->max_render_distance = sqrt((cube->width - 1) * (cube->width - 1) + (cube->height - 1) * (cube->height - 1));
 }
@@ -186,11 +192,12 @@ bool	ho_inter(t_cub3d *cube, double ray_angle, double *wall_hit_x, double *wall_
 		ray.y_intercept += TILE_SIZE;
 	ray.x_intercept = cube->player.x + (ray.y_intercept - cube->player.y) / tan(ray_angle);
 	ray.y_step = TILE_SIZE;
-	if (ray.facing_up)
-		ray.y_step *= -1;
 	ray.x_step = TILE_SIZE / tan(ray_angle);
-	if ((ray.facing_left && ray.x_step > 0) || (!ray.facing_left && ray.x_step < 0))
+	if (ray.facing_up)
+	{
+		ray.y_step *= -1;
 		ray.x_step *= -1;
+	}
 	ray.next_ho_x = ray.x_intercept;
 	ray.next_ho_y = ray.y_intercept;
 	while (ray.next_ho_x >= 0 && ray.next_ho_x < cube->width && ray.next_ho_y >= 0 && ray.next_ho_y <= cube->height)
@@ -219,11 +226,12 @@ bool	ve_inter(t_cub3d *cube, double ray_angle, double *wall_hit_x, double *wall_
 		ray.x_intercept += TILE_SIZE;
 	ray.y_intercept = cube->player.y + (ray.x_intercept - cube->player.x) * tan(ray_angle);
 	ray.x_step = TILE_SIZE;
-	if (ray.facing_left)
-		ray.x_step *= -1;
 	ray.y_step = TILE_SIZE * tan(ray_angle);
-	if ((ray.facing_up && ray.y_step > 0) || (!ray.facing_up && ray.y_step < 0))
+	if (ray.facing_left)
+	{
+		ray.x_step *= -1;
 		ray.y_step *= -1;
+	}
 	ray.next_ve_x = ray.x_intercept;
 	ray.next_ve_y = ray.y_intercept;
 	while (ray.next_ve_x >= 0 && ray.next_ve_x < cube->width && ray.next_ve_y >= 0 && ray.next_ve_y <= cube->height)
@@ -422,6 +430,7 @@ int	main(int ac, char **av)
 	initialize_cube(&cube);
 	if (!parser(&cube, av[1]))
 		return (1);
+	
 	initialize_mlx(&cube);
 	render_map(&cube);
 	mlx_key_hook(cube.mlx, loop_hook, &cube);

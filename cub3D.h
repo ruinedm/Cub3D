@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/28 05:12:26 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/28 22:17:57 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,13 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdbool.h> 
-# include <limits.h>
 # include <math.h>
 # include <stdio.h>
 
 # define NONE -1
 # define WIDTH 1280
 # define HEIGHT 920
-# define TILE_SIZE 32
+# define TILE_SIZE 64
 # define BLACK 0x000000FF
 # define WHITE 0xFFFFFFFF
 # define RED 0xFF0000FF
@@ -161,6 +160,7 @@ typedef struct s_cub3d
 	int			y_len;
 	int			strip_color;
 	int			max_render_distance;
+	int			player_direction;
 	bool		initial;
 	t_map		*map;
 	t_player	player;
@@ -188,7 +188,6 @@ void	ft_lstaddback_mapline(t_map **head, t_map *new);
 void	ft_lstiter_mapline(t_map *head);
 int		ft_lstsize_mapline(t_map *map);
 int		max_len(t_map *map);
-int		darken_color(int color, double distance, int max_distance);
 
 int	create_trgb(unsigned char t, unsigned char r, unsigned char g,
 		unsigned char b);
