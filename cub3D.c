@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/28 00:03:52 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/28 03:27:07 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,10 @@ void	initialize_cube(t_cub3d *cube)
 // AHSAN FUNCTION F DNYA LAY3TIK SE7A
 void    draw_line(t_cub3d *cube, double x0, double y0, double x1, double y1, uint32_t color)
 {
+	x0 *= MINI_MAP;
+	y0 *= MINI_MAP;
+	x1 *= MINI_MAP;
+	y1 *= MINI_MAP;
     double delta_x = x1 - x0;
     double delta_y = y1 - y0;
     int pixels = sqrt((delta_x * delta_x) + (delta_y * delta_y));
@@ -73,9 +77,9 @@ void	draw_circle(t_cub3d *cube)
 {
 	t_circle	cir;
 
-	cir.cx = cube->player.x;
-	cir.cy = cube->player.y;
-	cir.r = 5;
+	cir.cx = cube->player.x * MINI_MAP;
+	cir.cy = cube->player.y * MINI_MAP;
+	cir.r = 2;
 	cir.y = cir.cy - cir.r;
 	cir.r_squared = cir.r * cir.r;
 	while (cir.y < cir.cy + cir.r)
@@ -90,6 +94,9 @@ void	draw_circle(t_cub3d *cube)
 		}
 		cir.y++;
 	}
+	int final_x = cube->player.x + cos(cube->player.rotation_angle) * 60;
+	int final_y = cube->player.y + sin(cube->player.rotation_angle) * 60;
+	draw_line(cube, cube->player.x, cube->player.y, final_x, final_y, RED);
 }
 
 bool	is_a_player(int mode)
@@ -106,16 +113,16 @@ void	draw_tile(t_cub3d *cube, int x, int y, int mode)
 	int	scaled_y;
 	int	color;
 
-	scaled_x = x * TILE_SIZE;
-	scaled_y = y * TILE_SIZE;
+	scaled_x = x * TILE_SIZE * MINI_MAP;
+	scaled_y = y * TILE_SIZE * MINI_MAP;
 	color = WHITE;
 	if (mode == WALL)
 		color = BLACK;
 	i = 0;
-	while (i < TILE_SIZE)
+	while (i < TILE_SIZE * MINI_MAP)
 	{
 		j = 0;
-		while (j < TILE_SIZE)
+		while (j < TILE_SIZE * MINI_MAP)
 		{
 			if (color == (int)WHITE && (!i || !j))
 				mlx_put_pixel(cube->image, scaled_x + i, scaled_y + j, BLACK);
@@ -125,6 +132,7 @@ void	draw_tile(t_cub3d *cube, int x, int y, int mode)
 		}
 		i++;
 	}
+
 }
 
 double	normalize_angle(double angle)
@@ -230,9 +238,33 @@ bool	ve_inter(t_cub3d *cube, double ray_angle, double *wall_hit_x, double *wall_
 	return (false);
 }
 
-void	render_ray(t_cub3d *cube, double ray_angle)
+void	draw_rectangle(int start_x, int start_y, int width, int height, void *img)
+{
+	int real_height;
+	int real_width;
+	int x;
+	int y;
+
+	real_height = start_y + height;
+	real_width = start_x + width;
+	x = start_x;
+	y = start_y;
+	while(y < real_height)
+	{
+		x = start_x;
+		while(x < real_width)
+		{
+			mlx_put_pixel(img, x, y, RED);
+			x++;
+		}
+		y++;
+	}
+}
+
+void	render_ray(t_cub3d *cube, double ray_angle, int i)
 {
 	t_ray	ray;
+	int		wall_strip_height;
 
 	ray_angle = normalize_angle(ray_angle);
 	ray.hit_ho = ho_inter(cube, ray_angle, &ray.ho_wall_hit_x, &ray.ho_wall_hit_y);
@@ -246,9 +278,26 @@ void	render_ray(t_cub3d *cube, double ray_angle)
 	else
 		ray.ve_distance = INT_MAX;
 	if (ray.ho_distance < ray.ve_distance)
-		draw_line(cube, cube->player.x, cube->player.y, ray.ho_wall_hit_x, ray.ho_wall_hit_y, RED);
+		ray.ray_distance = ray.ho_distance;
 	else
-		draw_line(cube, cube->player.x, cube->player.y, ray.ve_wall_hit_x, ray.ve_wall_hit_y, RED);
+		ray.ray_distance = ray.ve_distance;
+	wall_strip_height = TILE_SIZE * cube->player.projection_plane_distance / (ray.ray_distance);
+	draw_rectangle(i, cube->height / 2 - wall_strip_height / 2, 1, wall_strip_height, cube->image);
+	t_map *map = cube->map;
+	int x = 0;
+	int y = 0;
+	while (map)
+	{
+		x = 0;
+		while (map->current_line[x])
+		{
+			draw_tile(cube, x, y, map->current_line[x]);
+			x++;
+		}
+		y++;
+		map = map->next;
+	}
+	draw_circle(cube);
 }
 
 void	ray_casting(t_cub3d *cube)
@@ -257,11 +306,10 @@ void	ray_casting(t_cub3d *cube)
 	int		i;
 
 	ray_angle = cube->player.rotation_angle - (FOV_ANGLE / 2);
-	ray_angle = normalize_angle(cube->player.rotation_angle - (FOV_ANGLE / 2));
 	i = 0;
 	while (i < cube->width)
 	{
-		render_ray(cube, ray_angle);
+		render_ray(cube, ray_angle, i);
 		ray_angle += FOV_ANGLE / cube->width;
 		i++;
 	}
@@ -276,12 +324,26 @@ void	render_map(t_cub3d *cube)
 	map = cube->map;
 	x = 0;
 	y = 0;
+	int color = CYAN;
+	while (y < cube->height)
+	{
+		if (y > cube->height / 2)
+			color = LIGHT_GREEN;
+		x = 0;
+		while (x < cube->width)
+		{
+			mlx_put_pixel(cube->image, x, y, color);
+			x++;
+		}
+		y++;
+	}
+	x = 0;
+	y = 0;
 	while (map)
 	{
 		x = 0;
 		while (map->current_line[x])
 		{
-			draw_tile(cube, x, y, map->current_line[x]);
 			if (!cube->initial && is_a_player(map->current_line[x]))
 			{
 				cube->player.x = x * TILE_SIZE + TILE_SIZE / 2;
@@ -293,7 +355,6 @@ void	render_map(t_cub3d *cube)
 		y++;
 		map = map->next;
 	}
-	draw_circle(cube);
 	ray_casting(cube);
 }
 

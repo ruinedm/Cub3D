@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/27 14:50:59 by aboukdid         ###   ########.fr       */
+/*   Updated: 2024/08/28 02:25:28 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@
 # define BLACK 0x000000FF
 # define WHITE 0xFFFFFFFF
 # define RED 0xFF0000FF
-# define PI 3.14159265
-
-# define FOV_ANGLE 60 * (PI / 180)
-# define NUM_RAYS WIDTH
+# define CYAN 0x00FFFFFF
+# define LIGHT_GREEN 0x90EE90FF
+# define FOV_ANGLE 60 * (M_PI / 180)
+# define MINI_MAP 0.2
 
 enum e_parse_options
 {
@@ -88,6 +88,7 @@ typedef struct s_player
 	double	rotation_angle;
 	int		movement_speed;
 	double	rotation_speed;
+	int		projection_plane_distance;
 }	t_player;
 
 typedef struct s_map
@@ -134,7 +135,7 @@ typedef struct s_ray
 	bool	hit_ver;
 	double	ho_distance;
 	double ve_distance;
-	
+	double ray_distance;
 }	t_ray;
 
 typedef struct s_cub3d
