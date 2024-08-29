@@ -6,10 +6,10 @@ MLX_LIB = libmlx42.a -ldl /Users/$(shell whoami)/.brew/lib/libglfw3.a -pthread -
 HEADERS = -I ./MLX42/include
 OBJ_DIR = obj
 
-SRC = cub3D.c  draw.c ray.c math.c\
-      parsing/parser.c parsing/parsing_errors.c  parsing/parsser_helper.c\
+SRC = cub3D.c raycasting.c \
+      parsing/parser.c parsing/parsing_errors.c  parsing/parsing_helper.c\
       get_next_line/get_next_line.c \
-      utils/printing_utils.c utils/string_utils.c utils/string_utils2.c utils/ft_atoi.c utils/ll_utils.c
+      utils/printing_utils.c utils/string_utils.c utils/string_utils2.c utils/ft_atoi.c utils/ll_utils.c utils/math_utils.c utils/draw_utils.c utils/other_utils.c
 
 OBJ = $(addprefix $(OBJ_DIR)/,$(SRC:.c=.o))
 LINK_OBJ = $(addprefix $(OBJ_DIR)/,$(notdir $(SRC:.c=.o)))

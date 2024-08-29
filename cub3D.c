@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/29 00:54:49 by aboukdid         ###   ########.fr       */
+/*   Updated: 2024/08/29 01:36:47 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,11 @@ void	initialize_cube(t_cub3d *cube)
 	cube->floor_b = NONE;
 	cube->floor_r = NONE;
 	cube->floor_b = NONE;
-	cube->ea_path = NULL;
 	cube->map = NULL;
-	cube->no_path = NULL;
-	cube->so_path = NULL;
-	cube->we_path = NULL;
+	cube->ea_texture = NULL;
+	cube->no_texture = NULL;
+	cube->so_texture = NULL;
+	cube->we_texture = NULL;
 	cube->initial = false;
 	cube->player.x = 0;
 	cube->player.y = 0;

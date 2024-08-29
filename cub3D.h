@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/29 00:54:49 by aboukdid         ###   ########.fr       */
+/*   Updated: 2024/08/29 01:18:25 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,10 +146,10 @@ typedef struct s_cub3d
 	int			width;
 	int			height;
 	double		delta_time;
-	char		*no_path;
-	char		*so_path;
-	char		*we_path;
-	char		*ea_path;
+	void		*no_texture;
+	void		*so_texture;
+	void		*we_texture;
+	void		*ea_texture;
 	int			floor_r;
 	int			floor_g;
 	int			floor_b;
