@@ -3,8 +3,8 @@ EA textures/text.png
 SO textures/text.png
 WE textures/text.png
 
-C 35,21,150
-F 15,6,40
+C 0,255,255
+F 175,225,175
 
 111111111111111
 111111000111111

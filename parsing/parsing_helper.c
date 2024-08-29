@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_helper.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 00:45:55 by aboukdid          #+#    #+#             */
-/*   Updated: 2024/08/29 01:34:56 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/29 03:22:44 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,11 @@ bool	is_good_color(char *str)
 			i++;
 	}
 	return (true);
+}
+
+int	get_color(int r, int g, int b, int a)
+{
+	return (r << 24 | g << 16 | b << 8 | a);
 }
 
 bool	set_color(char *str, t_cub3d *cube, int c_type)
@@ -82,12 +87,14 @@ bool	set_color(char *str, t_cub3d *cube, int c_type)
 		cube->floor_r = r;
 		cube->floor_g = g;
 		cube->floor_b = b;
+		cube->floor = get_color(r, g, b, 255);
 	}
 	else
 	{
 		cube->ceiling_r = r;
 		cube->ceiling_g = g;
 		cube->ceiling_b = b;
+		cube->ceiling = get_color(r, g, b, 255);
 	}
 	return (true);
 }

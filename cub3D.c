@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/29 03:18:41 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/29 03:20:50 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,17 +71,18 @@ void	render_map(t_cub3d *cube)
 	x = 0;
 	y = 0;
 	color = create_trgb(0, cube->ceiling_r, cube->ceiling_g, cube->ceiling_b);
-	while (y < cube->height)
+	while (x < cube->width)
 	{
-		if (y > cube->height / 2)
-			color = cube->floor_r << 16 | cube->floor_g << 8 | cube->floor_b;
-		x = 0;
-		while (x < cube->width)
+		y = 0;
+		while (y < cube->height)
 		{
-			mlx_put_pixel(cube->image, x, y, color);
-			x++;
+			if (y > cube->height / 2)
+				mlx_put_pixel(cube->image, x, y, cube->floor);
+			else
+				mlx_put_pixel(cube->image, x, y, cube->ceiling);
+			y++;
 		}
-		y++;
+		x++;
 	}
 	x = 0;
 	y = 0;

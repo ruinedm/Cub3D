@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/29 02:59:57 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/29 03:21:06 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,9 +154,11 @@ typedef struct s_cub3d
 	int			floor_r;
 	int			floor_g;
 	int			floor_b;
+	int			floor;
 	int			ceiling_r;
 	int			ceiling_g;
 	int			ceiling_b;
+	int			ceiling;
 	int			map_fd;
 	int			x_len;
 	int			y_len;
