@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_errors.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 16:27:59 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/29 00:54:49 by aboukdid         ###   ########.fr       */
+/*   Updated: 2024/08/29 05:40:59 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3D.h"
 
-void	prin_err(char *str)
+void	print_err(char *str)
 {
 	ft_putstr_fd(2, "Error\n");
 	if (str)

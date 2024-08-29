@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 16:25:15 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/29 01:33:35 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/29 05:40:59 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,10 @@ int	parse_line(char *str, t_cub3d *cube)
 	{
 		cube->map = get_map(str, cube);
 		if (!cube->map)
-			return (prin_err("Invalid map"), 0);
+			return (print_err("Invalid map"), 0);
 	}
 	else
-		return (prin_err("Invalid config file"), 0);
+		return (print_err("Invalid config file"), 0);
 	return (1);
 }
 
@@ -99,10 +99,10 @@ int	parser(t_cub3d *cube, char *map_name)
 	while (map_name[i] && map_name[i] != '.')
 		i++;
 	if (ft_strcmp(&map_name[i], ".cub"))
-		return (prin_err("Invalid map name"), 0);
+		return (print_err("Invalid map name"), 0);
 	fd = open(map_name, O_RDONLY, 0644);
 	if (fd == -1)
-		return (prin_err(NULL), 0);
+		return (print_err(NULL), 0);
 	cube->map_fd = fd;
 	line = get_next_line(fd);
 	while (line)
@@ -115,14 +115,14 @@ int	parser(t_cub3d *cube, char *map_name)
 	if (!do_i_exist(cube, F) || !do_i_exist(cube, C)
 		|| !do_i_exist(cube, EA) || !do_i_exist(cube, SO)
 		|| !do_i_exist(cube, WE) || !do_i_exist(cube, NO))
-		return (prin_err("Missing parameter"), 0);
+		return (print_err("Missing parameter"), 0);
 	if (!cube->map)
-		return (prin_err("Invalid or missing map"), 0);
+		return (print_err("Invalid or missing map"), 0);
 	cube->x_len = max_len(cube->map);
 	cube->y_len = ft_lstsize_mapline(cube->map);
 	cube->width = cube->x_len * TILE_SIZE;
 	cube->height = cube->y_len * TILE_SIZE;
-	cube->player.pp_distance = cube->width / (2 * tan(FOV_ANGLE / 2));
+	cube->player.tiled_pp_dist = cube->width / (2 * tan(FOV_ANGLE / 2)) * TILE_SIZE; // MULTIPLYING BY TILE_SIZE IS JUST FOR OPTIMIZATION PURPOSES FOR PP DISTANCE AND IS NOT A PART OF THE FORMULA
 	close(fd);
 	return (1);
 }

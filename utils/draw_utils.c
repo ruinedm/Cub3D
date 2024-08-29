@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 00:16:57 by aboukdid          #+#    #+#             */
-/*   Updated: 2024/08/29 01:13:19 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/29 11:12:26 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	draw_line(t_cub3d *cube, double x0, double y0
 	}
 }
 
-void	draw_circle(t_cub3d *cube)
+void	draw_mini_player(t_cub3d *cube)
 {
 	t_circle	cir;
 	int			final_x;

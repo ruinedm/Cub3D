@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 00:21:41 by aboukdid          #+#    #+#             */
-/*   Updated: 2024/08/29 02:58:08 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/29 11:46:37 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,7 @@ void	render_ray(t_cub3d *cube, double ray_angle, int i)
 		ray.ray_distance = ray.ve_distance;
 	ray_angle_diff = normalize_angle(ray_angle - cube->player.rotation_angle);
 	corrected_distance = ray.ray_distance * cos(ray_angle_diff);
-	wall_strip_height = TILE_SIZE * cube->player.pp_distance
-		/ (corrected_distance);
+	wall_strip_height = cube->player.tiled_pp_dist / corrected_distance;
 	transparency = 25000.0 / corrected_distance;
 	transparency = fmin(fmax(transparency, 0.0), 255.0);
 	cube->strip_color = create_trgb((unsigned char)transparency, 255, 255, 255);

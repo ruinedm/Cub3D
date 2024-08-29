@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/29 03:20:50 by aboukdid         ###   ########.fr       */
+/*   Updated: 2024/08/29 11:47:32 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	initialize_mlx(t_cub3d *cube)
 	if (!cube->image)
 		exit(EXIT_FAILURE);
 	mlx_image_to_window(cube->mlx, cube->image, 0, 0);
+	
 }
 
 void	initialize_cube(t_cub3d *cube)
@@ -41,10 +42,10 @@ void	initialize_cube(t_cub3d *cube)
 	cube->floor_r = NONE;
 	cube->floor_b = NONE;
 	cube->map = NULL;
-	cube->ea_texture = NULL;
-	cube->no_texture = NULL;
-	cube->so_texture = NULL;
-	cube->we_texture = NULL;
+	cube->textures.ea_texture = NULL;
+	cube->textures.no_texture = NULL;
+	cube->textures.so_texture = NULL;
+	cube->textures.we_texture = NULL;
 	cube->initial = false;
 	cube->player.x = 0;
 	cube->player.y = 0;
@@ -55,9 +56,55 @@ void	initialize_cube(t_cub3d *cube)
 	cube->player.movement_speed = 9;
 	cube->player.rotation_speed = 9 * (M_PI / 180);
 	cube->player_direction = NONE;
-	cube->strip_color = RED;
 	cube->max_render_distance = sqrt((cube->width - 1) * (cube->width - 1)
 			+ (cube->height - 1) * (cube->height - 1));
+}
+
+void    minimap(t_cub3d *cube)
+{
+    t_map    *map;
+    int        x;
+    int        y;
+
+    map = cube->map;
+    x = 0;
+    y = 0;
+    while (map)
+    {
+        x = 0;
+        while (map->current_line[x])
+        {
+            draw_tile(cube, x, y, map->current_line[x]);
+            x++;
+        }
+        y++;
+        map = map->next;
+    }
+    draw_mini_player(cube);
+}
+
+void    set_flo_ce(t_cub3d *cube)
+{
+    t_map    *map;
+    int        x;
+    int        y;
+
+    map = cube->map;
+    x = 0;
+    y = 0;
+    while (x < cube->width)
+    {
+        y = 0;
+        while (y < cube->height)
+        {
+            if (y > cube->height / 2)
+                mlx_put_pixel(cube->image, x, y, cube->floor);
+            else
+                mlx_put_pixel(cube->image, x, y, cube->ceiling);
+            y++;
+        }
+        x++;
+    }
 }
 
 void	render_map(t_cub3d *cube)
@@ -65,27 +112,11 @@ void	render_map(t_cub3d *cube)
 	t_map	*map;
 	int		x;
 	int		y;
-	int		color;
 
 	map = cube->map;
 	x = 0;
 	y = 0;
-	color = create_trgb(0, cube->ceiling_r, cube->ceiling_g, cube->ceiling_b);
-	while (x < cube->width)
-	{
-		y = 0;
-		while (y < cube->height)
-		{
-			if (y > cube->height / 2)
-				mlx_put_pixel(cube->image, x, y, cube->floor);
-			else
-				mlx_put_pixel(cube->image, x, y, cube->ceiling);
-			y++;
-		}
-		x++;
-	}
-	x = 0;
-	y = 0;
+	set_flo_ce(cube);
 	while (map)
 	{
 		x = 0;
@@ -103,6 +134,7 @@ void	render_map(t_cub3d *cube)
 		map = map->next;
 	}
 	ray_casting(cube);
+	// minimap(cube); MINI_MAP ==> FOR DEBUGGING
 }
 
 void	loop_hook(mlx_key_data_t key_data, void *param)
@@ -145,7 +177,10 @@ void	loop_hook(mlx_key_data_t key_data, void *param)
 			return ;
 	}
 	strafe = cube->player.strafe_direction * cube->player.movement_speed;
-	step = cube->player.walk_direction * cube->player.movement_speed;
+	if(!strafe)
+		step = cube->player.walk_direction * cube->player.movement_speed;
+	else
+		step = cube->player.walk_direction;
 	new_x = cube->player.x + step * cos(cube->player.rotation_angle) + strafe * cos(cube->player.rotation_angle + M_PI_2);
 	new_y = cube->player.y + step * sin(cube->player.rotation_angle) + strafe * sin(cube->player.rotation_angle + M_PI_2);
 	if (!collides_with_wall(cube, new_x, new_y))
@@ -162,10 +197,9 @@ int	main(int ac, char **av)
 {
 	t_cub3d	cube;
 
-	(void)av;
 	if (ac != 2)
 	{
-		prin_err("Invalid number of arguments");
+		print_err("Invalid number of arguments");
 		return (1);
 	}
 	initialize_cube(&cube);

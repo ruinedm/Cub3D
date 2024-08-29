@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/29 03:21:06 by aboukdid         ###   ########.fr       */
+/*   Updated: 2024/08/29 08:29:29 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ typedef struct s_player
 	int		strafe_direction;
 	int		movement_speed;
 	double	rotation_speed;
-	int		pp_distance;
+	int		tiled_pp_dist;
 }	t_player;
 
 typedef struct s_map
@@ -139,40 +139,44 @@ typedef struct s_ray
 	double	ray_distance;
 }	t_ray;
 
+typedef struct s_textures
+{
+	mlx_texture_t		*no_texture;
+	mlx_texture_t		*so_texture;
+	mlx_texture_t		*we_texture;
+	mlx_texture_t		*ea_texture;
+	int					**scaled_texture;
+} t_textures;
+
 typedef struct s_cub3d
 {
-	void		*mlx;
-	void		*image;
-	void		*context;
-	int			width;
-	int			height;
-	double		delta_time;
-	void		*no_texture;
-	void		*so_texture;
-	void		*we_texture;
-	void		*ea_texture;
-	int			floor_r;
-	int			floor_g;
-	int			floor_b;
-	int			floor;
-	int			ceiling_r;
-	int			ceiling_g;
-	int			ceiling_b;
-	int			ceiling;
-	int			map_fd;
-	int			x_len;
-	int			y_len;
-	int			strip_color;
-	int			max_render_distance;
-	int			player_direction;
-	bool		initial;
-	t_map		*map;
-	t_player	player;
+	void				*mlx;
+	void				*image;
+	int					width;
+	int					height;
+	int					floor_r;
+	int					floor_g;
+	int					floor_b;
+	int					floor;
+	int					ceiling_r;
+	int					ceiling_g;
+	int					ceiling_b;
+	int					ceiling;
+	int					map_fd;
+	int					x_len;
+	int					y_len;
+	int					strip_color;
+	int					max_render_distance;
+	int					player_direction;
+	bool				initial;
+	t_textures			textures;
+	t_map				*map;
+	t_player			player;
 }	t_cub3d;
 
 // PARSING
 int		parser(t_cub3d *cube, char *map_name);
-void	prin_err(char *str);
+void	print_err(char *str);
 char	*get_next_line(int fd);
 bool	is_valid_inner(t_map *map, int *player_direction);
 bool	set_color(char *str, t_cub3d *cube, int c_type);
@@ -199,7 +203,7 @@ int		create_trgb(unsigned char t, unsigned char r, unsigned char g,
 			unsigned char b);
 void	draw_line(t_cub3d *cube, double x0, double y0,
 			double x1, double y1, uint32_t color);
-void	draw_circle(t_cub3d *cube);
+void	draw_mini_player(t_cub3d *cube);
 void	draw_tile(t_cub3d *cube, int x, int y, int mode);
 void	draw_rectangle(int start_x, int start_y,
 			int width, int height, t_cub3d *cube);
@@ -213,5 +217,5 @@ double	normalize_angle(double angle);
 double	distance(t_cub3d *cube, double x, double y);
 bool	collides_with_wall(t_cub3d *cube, int new_x, int new_y);
 bool	is_a_player(int mode);
-
+void    scaled_texture(t_cub3d *cube);
 #endif

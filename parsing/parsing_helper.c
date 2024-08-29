@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_helper.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 00:45:55 by aboukdid          #+#    #+#             */
-/*   Updated: 2024/08/29 03:22:44 by aboukdid         ###   ########.fr       */
+/*   Updated: 2024/08/29 08:55:59 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,19 +56,19 @@ bool	set_color(char *str, t_cub3d *cube, int c_type)
 	int	b;
 
 	if (do_i_exist(cube, c_type))
-		return (prin_err("Duplicate paramaters are not accepted!"), false);
+		return (print_err("Duplicate paramaters are not accepted!"), false);
 	str++;
 	while (*str && is_ws(*str))
 		str++;
 	if (!is_good_color(str))
 	{
-		prin_err("Syntax error in color line.");
+		print_err("Syntax error in color line.");
 		return (false);
 	}
 	while (*str && is_ws(*str))
 		str++;
 	if (!is_good_color(str))
-		return (prin_err("Invalid color format."), 0);
+		return (print_err("Invalid color format."), 0);
 	r = ft_atoi(str);
 	while (*str && is_digit(*str))
 		str++;
@@ -81,7 +81,7 @@ bool	set_color(char *str, t_cub3d *cube, int c_type)
 	str++;
 	b = ft_atoi(str);
 	if ((r < 0 || r > 255) || (g < 0 || g > 255) || (b < 0 || b > 255))
-		return (prin_err("Invalid color range"), false);
+		return (print_err("Invalid color range"), false);
 	if (c_type == F)
 	{
 		cube->floor_r = r;
@@ -104,24 +104,24 @@ bool	set_textures(char *str, t_cub3d *cube, int texture)
 	void *texture_ptr;
 
 	if (do_i_exist(cube, texture))
-		return (prin_err("Duplicate paramaters are not accepted!"), false);
+		return (print_err("Duplicate paramaters are not accepted!"), false);
 	str++;
 	str++;
 	while (*str && is_ws(*(str)))
 		str++;
 	if (!*str)
-		return (prin_err("Invalid north texture"), false);
+		return (print_err("Invalid north texture"), false);
 	texture_ptr = mlx_load_png(str);
 	if(!texture)
 		return (false);
 	if (texture == NO)
-		cube->no_texture = texture_ptr;
+		cube->textures.no_texture = texture_ptr;
 	else if (texture == SO)
-		cube->so_texture = texture_ptr;
+		cube->textures.so_texture = malloc(1);
 	else if (texture == WE)
-		cube->we_texture = texture_ptr;
+		cube->textures.we_texture = malloc(1);
 	else if (texture == EA)
-		cube->ea_texture = texture_ptr;
+		cube->textures.ea_texture = malloc(1);
 	return (true);
 }
 
@@ -163,12 +163,12 @@ bool	do_i_exist(t_cub3d *cube, int type)
 	else if (type == C)
 		return (cube->ceiling_r != NONE);
 	else if (type == NO)
-		return (cube->no_texture);
+		return (cube->textures.no_texture);
 	else if (type == SO)
-		return (cube->so_texture);
+		return (cube->textures.so_texture);
 	else if (type == WE)
-		return (cube->we_texture);
+		return (cube->textures.we_texture);
 	else if (type == EA)
-		return (cube->ea_texture);
+		return (cube->textures.ea_texture);
 	return (false);
 }
