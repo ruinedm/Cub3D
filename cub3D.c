@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/29 01:36:47 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/29 03:18:41 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void	initialize_cube(t_cub3d *cube)
 	cube->player.angle = 0;
 	cube->player.turn_direction = 0;
 	cube->player.walk_direction = 0;
+	cube->player.strafe_direction = 0;
 	cube->player.movement_speed = 9;
 	cube->player.rotation_speed = 9 * (M_PI / 180);
 	cube->player_direction = NONE;
@@ -107,6 +108,7 @@ void	loop_hook(mlx_key_data_t key_data, void *param)
 {
 	t_cub3d	*cube;
 	int		step;
+	int		strafe;
 	int		new_x;
 	int		new_y;
 
@@ -118,8 +120,12 @@ void	loop_hook(mlx_key_data_t key_data, void *param)
 		else if (key_data.key == MLX_KEY_S)
 			cube->player.walk_direction = -1;
 		else if (key_data.key == MLX_KEY_A)
-			cube->player.turn_direction = -1;
+			cube->player.strafe_direction = -1;
 		else if (key_data.key == MLX_KEY_D)
+			cube->player.strafe_direction = 1;
+		else if (key_data.key == MLX_KEY_LEFT)
+			cube->player.turn_direction = -1;
+		else if (key_data.key == MLX_KEY_RIGHT)
 			cube->player.turn_direction = 1;
 		else if (key_data.key == MLX_KEY_ESCAPE)
 			exit(0);
@@ -131,13 +137,16 @@ void	loop_hook(mlx_key_data_t key_data, void *param)
 		if (key_data.key == MLX_KEY_W || key_data.key == MLX_KEY_S)
 			cube->player.walk_direction = 0;
 		else if (key_data.key == MLX_KEY_A || key_data.key == MLX_KEY_D)
+			cube->player.strafe_direction = 0;
+		else if (key_data.key == MLX_KEY_LEFT || key_data.key == MLX_KEY_RIGHT)
 			cube->player.turn_direction = 0;
 		else
 			return ;
 	}
+	strafe = cube->player.strafe_direction * cube->player.movement_speed;
 	step = cube->player.walk_direction * cube->player.movement_speed;
-	new_x = cube->player.x + step * cos(cube->player.rotation_angle);
-	new_y = cube->player.y + step * sin(cube->player.rotation_angle);
+	new_x = cube->player.x + step * cos(cube->player.rotation_angle) + strafe * cos(cube->player.rotation_angle + M_PI_2);
+	new_y = cube->player.y + step * sin(cube->player.rotation_angle) + strafe * sin(cube->player.rotation_angle + M_PI_2);
 	if (!collides_with_wall(cube, new_x, new_y))
 	{
 		cube->player.x = new_x;

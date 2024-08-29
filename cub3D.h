@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/29 01:18:25 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/29 02:59:57 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ typedef struct s_player
 	int		turn_direction;
 	int		walk_direction;
 	double	rotation_angle;
+	int		strafe_direction;
 	int		movement_speed;
 	double	rotation_speed;
 	int		pp_distance;
