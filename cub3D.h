@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/30 04:41:52 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/30 10:35:39 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 # define MINI_MAP 0.2
 # define HORIZONTAL 0
 # define VERTICAL 1
-#define SMALL_VALUE 0.0001
+# define SMALL_VALUE 0.0001
 
 
 enum e_parse_options
@@ -174,6 +174,7 @@ typedef struct s_cub3d
 	int					strip_color;
 	int					max_render_distance;
 	int					player_direction;
+	double				center_factor;
 	bool				initial;
 	t_textures			textures;
 	t_map				*map;
@@ -205,8 +206,8 @@ void	ft_lstaddback_mapline(t_map **head, t_map *new);
 void	ft_lstiter_mapline(t_map *head);
 int		ft_lstsize_mapline(t_map *map);
 int		max_len(t_map *map);
-int		create_trgb(unsigned char t, unsigned char r, unsigned char g,
-			unsigned char b);
+int	create_rgba( int r, int g,
+		int b, int a);
 void	draw_line(t_cub3d *cube, double x0, double y0,
 			double x1, double y1, uint32_t color);
 void	draw_mini_player(t_cub3d *cube);

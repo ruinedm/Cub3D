@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/30 04:38:46 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/30 08:31:47 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	initialize_cube(t_cub3d *cube)
 	cube->player.movement_speed = 9;
 	cube->player.rotation_speed = 9 * (M_PI / 180);
 	cube->player_direction = NONE;
+	cube->center_factor = 2;
 	cube->max_render_distance = sqrt((cube->width - 1) * (cube->width - 1)
 			+ (cube->height - 1) * (cube->height - 1));
 }
@@ -101,7 +102,7 @@ void    set_flo_ce(t_cub3d *cube)
         y = 0;
         while (y < cube->height)
         {
-            if (y > cube->height / 2)
+            if (y > (int)(cube->height / cube->center_factor))
                 mlx_put_pixel(cube->image, x, y, cube->floor);
             else
                 mlx_put_pixel(cube->image, x, y, cube->ceiling);

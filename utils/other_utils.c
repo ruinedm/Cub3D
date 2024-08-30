@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 01:10:18 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/29 01:10:45 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/30 10:41:41 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,7 @@ bool	is_a_player(int mode)
 		|| mode == PLAYER_N || mode == PLAYER_S);
 }
 
-
-int	create_trgb(unsigned char t, unsigned char r, unsigned char g,
-		unsigned char b)
+int create_rgba(int r, int g, int b, int a)
 {
-	unsigned char	trgb[4];
-
-	trgb[0] = t;
-	trgb[1] = r;
-	trgb[2] = g;
-	trgb[3] = b;
-	return (*(int *)trgb);
+    return (r << 24 | g << 16 | b << 8 | a);
 }

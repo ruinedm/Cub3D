@@ -6,11 +6,53 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 00:21:41 by aboukdid          #+#    #+#             */
-/*   Updated: 2024/08/30 04:44:42 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/30 10:35:50 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
+
+void render_texture(t_cub3d *cube, double offset, int wall_strip_height, int x)
+{
+    int texture_x;
+    int texture_y;
+    int end_y;
+    int y;
+    int start_y;
+    int color;
+	uint8_t *pixel;
+    double percentage;
+    mlx_texture_t *texture = cube->textures.no_texture;
+
+    texture_x = (int)(offset * texture->width);
+    start_y = cube->height / 2 - wall_strip_height / 2;
+    if (start_y < 0)
+        start_y = 0;
+    y = start_y;
+    end_y = y + wall_strip_height;
+    if (end_y > cube->height)
+        end_y = cube->height;
+
+    while (y < end_y)
+    {
+        percentage = (double)(y - start_y) / wall_strip_height;
+        texture_y = (int)(percentage * texture->height);
+        if (texture_y < 0)
+            texture_y = 0;
+        if (texture_y >= texture->height)
+            texture_y = texture->height - 1;
+
+        pixel = texture->pixels + (texture_x * texture->bytes_per_pixel) + (texture_y * texture->width * texture->bytes_per_pixel);
+       	uint8_t r = pixel[0];
+        uint8_t g = pixel[1];
+        uint8_t b = pixel[2];
+        uint8_t a = pixel[3];
+
+        color = create_rgba(r, g ,b, a);
+        mlx_put_pixel(cube->image, x, y, color);
+        y++;
+    }
+}
 
 void	ray_casting(t_cub3d *cube)
 {
@@ -34,6 +76,7 @@ void	render_ray(t_cub3d *cube, double ray_angle, int i)
 	double	ray_angle_diff;
 	double	corrected_distance;
 	double	transparency;
+	double	offset;
 
 	ray_angle = normalize_angle(ray_angle);
 	ray.hit_ho = ho_inter(cube, ray_angle,
@@ -52,25 +95,21 @@ void	render_ray(t_cub3d *cube, double ray_angle, int i)
 	{
 		ray.ray_distance = ray.ho_distance;
 		ray.ray_type = HORIZONTAL;
+		offset = fmod(ray.ho_wall_hit_x, TILE_SIZE);
 	}
 	else
 	{
 		ray.ray_distance = ray.ve_distance;
 		ray.ray_type = VERTICAL;
+		offset = fmod(ray.ve_wall_hit_y, TILE_SIZE);
 	}
+	offset /= TILE_SIZE;
 	if (ray.ray_distance < SMALL_VALUE)
 		ray.ray_distance = SMALL_VALUE;
 	ray_angle_diff = normalize_angle(ray_angle - cube->player.rotation_angle);
 	corrected_distance = ray.ray_distance * cos(ray_angle_diff);
 	wall_strip_height = cube->player.tiled_pp_dist / corrected_distance;
-	transparency = 25000.0 / corrected_distance;
-	transparency = fmin(fmax(transparency, 0.0), 255.0);
-	if (ray.ray_type == HORIZONTAL)
-		cube->strip_color = create_trgb((unsigned char)transparency, 84, 80, 26);
-	else
-		cube->strip_color = create_trgb((unsigned char)transparency, 123, 237, 154);
-	draw_rectangle(i, cube->height / 2 - wall_strip_height
-		/ 2, 1, wall_strip_height, cube);
+	render_texture(cube, offset, wall_strip_height, i);
 }
 
 bool	ve_inter(t_cub3d *cube, double ray_angle
