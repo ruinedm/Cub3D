@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/29 08:29:29 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/30 04:41:52 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <stdbool.h> 
 # include <math.h>
 # include <stdio.h>
-# include "MLX42/include/MLX42/MLX42.h"
+# include "MLX42.h"
 
 # define NONE -1
 # define WIDTH 1280
@@ -32,6 +32,10 @@
 # define LIGHT_GREEN 0x90EE90FF
 # define FOV_ANGLE 60 * (M_PI / 180)
 # define MINI_MAP 0.2
+# define HORIZONTAL 0
+# define VERTICAL 1
+#define SMALL_VALUE 0.0001
+
 
 enum e_parse_options
 {
@@ -90,6 +94,7 @@ typedef struct s_player
 	int		movement_speed;
 	double	rotation_speed;
 	int		tiled_pp_dist;
+	int		real_pp_dist;
 }	t_player;
 
 typedef struct s_map
@@ -137,6 +142,7 @@ typedef struct s_ray
 	double	ho_distance;
 	double	ve_distance;
 	double	ray_distance;
+	int		ray_type;
 }	t_ray;
 
 typedef struct s_textures
@@ -217,5 +223,5 @@ double	normalize_angle(double angle);
 double	distance(t_cub3d *cube, double x, double y);
 bool	collides_with_wall(t_cub3d *cube, int new_x, int new_y);
 bool	is_a_player(int mode);
-void    scaled_texture(t_cub3d *cube);
+void	raycast1(t_cub3d *cube);
 #endif

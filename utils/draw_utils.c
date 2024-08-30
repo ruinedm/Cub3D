@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 00:16:57 by aboukdid          #+#    #+#             */
-/*   Updated: 2024/08/29 11:12:26 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/30 04:12:59 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,17 +107,22 @@ void	draw_rectangle(int start_x, int start_y,
 
 	real_height = start_y + height;
 	real_width = start_x + width;
+
+	if (start_x < 0)
+		start_x = 0;
+	if (start_y < 0)
+		start_y = 0;
+	if (real_height > cube->height)
+		real_height = cube->height;
+	if (real_width > cube->width)
+		real_width = cube->width;
 	x = start_x;
 	y = start_y;
 	while (y < real_height)
 	{
-		if (y < 0 || y >= cube->height)
-			return ;
 		x = start_x;
 		while (x < real_width)
 		{
-			if (x < 0 || x >= cube->width)
-				return ;
 			mlx_put_pixel(cube->image, x, y, cube->strip_color);
 			x++;
 		}

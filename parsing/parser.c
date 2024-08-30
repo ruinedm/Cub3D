@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 16:25:15 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/29 05:40:59 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/30 04:41:27 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,8 @@ int	parser(t_cub3d *cube, char *map_name)
 	cube->y_len = ft_lstsize_mapline(cube->map);
 	cube->width = cube->x_len * TILE_SIZE;
 	cube->height = cube->y_len * TILE_SIZE;
-	cube->player.tiled_pp_dist = cube->width / (2 * tan(FOV_ANGLE / 2)) * TILE_SIZE; // MULTIPLYING BY TILE_SIZE IS JUST FOR OPTIMIZATION PURPOSES FOR PP DISTANCE AND IS NOT A PART OF THE FORMULA
+	cube->player.real_pp_dist = cube->width / (2 * tan(FOV_ANGLE / 2));
+	cube->player.tiled_pp_dist = cube->player.real_pp_dist * TILE_SIZE;
 	close(fd);
 	return (1);
 }

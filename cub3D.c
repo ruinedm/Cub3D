@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/29 11:47:32 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/30 04:38:46 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,9 @@ void	initialize_cube(t_cub3d *cube)
 			+ (cube->height - 1) * (cube->height - 1));
 }
 
+
+
+
 void    minimap(t_cub3d *cube)
 {
     t_map    *map;
@@ -81,6 +84,7 @@ void    minimap(t_cub3d *cube)
         map = map->next;
     }
     draw_mini_player(cube);
+	// raycast1(cube);
 }
 
 void    set_flo_ce(t_cub3d *cube)
@@ -134,8 +138,9 @@ void	render_map(t_cub3d *cube)
 		map = map->next;
 	}
 	ray_casting(cube);
-	// minimap(cube); MINI_MAP ==> FOR DEBUGGING
+	minimap(cube); // MINI_MAP ==> FOR DEBUGGING
 }
+
 
 void	loop_hook(mlx_key_data_t key_data, void *param)
 {

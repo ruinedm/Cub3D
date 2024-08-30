@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 00:21:41 by aboukdid          #+#    #+#             */
-/*   Updated: 2024/08/29 11:46:37 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/30 04:44:42 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,26 @@ void	render_ray(t_cub3d *cube, double ray_angle, int i)
 	else
 		ray.ve_distance = INT_MAX;
 	if (ray.ho_distance < ray.ve_distance)
+	{
 		ray.ray_distance = ray.ho_distance;
+		ray.ray_type = HORIZONTAL;
+	}
 	else
+	{
 		ray.ray_distance = ray.ve_distance;
+		ray.ray_type = VERTICAL;
+	}
+	if (ray.ray_distance < SMALL_VALUE)
+		ray.ray_distance = SMALL_VALUE;
 	ray_angle_diff = normalize_angle(ray_angle - cube->player.rotation_angle);
 	corrected_distance = ray.ray_distance * cos(ray_angle_diff);
 	wall_strip_height = cube->player.tiled_pp_dist / corrected_distance;
 	transparency = 25000.0 / corrected_distance;
 	transparency = fmin(fmax(transparency, 0.0), 255.0);
-	cube->strip_color = create_trgb((unsigned char)transparency, 255, 255, 255);
+	if (ray.ray_type == HORIZONTAL)
+		cube->strip_color = create_trgb((unsigned char)transparency, 84, 80, 26);
+	else
+		cube->strip_color = create_trgb((unsigned char)transparency, 123, 237, 154);
 	draw_rectangle(i, cube->height / 2 - wall_strip_height
 		/ 2, 1, wall_strip_height, cube);
 }

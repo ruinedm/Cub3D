@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 00:45:55 by aboukdid          #+#    #+#             */
-/*   Updated: 2024/08/29 08:55:59 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/30 04:38:18 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ bool	set_color(char *str, t_cub3d *cube, int c_type)
 
 bool	set_textures(char *str, t_cub3d *cube, int texture)
 {
-	void *texture_ptr;
+	mlx_texture_t *texture_ptr;
 
 	if (do_i_exist(cube, texture))
 		return (print_err("Duplicate paramaters are not accepted!"), false);
@@ -115,7 +115,9 @@ bool	set_textures(char *str, t_cub3d *cube, int texture)
 	if(!texture)
 		return (false);
 	if (texture == NO)
+	{
 		cube->textures.no_texture = texture_ptr;
+	}
 	else if (texture == SO)
 		cube->textures.so_texture = malloc(1);
 	else if (texture == WE)
