@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/30 08:31:47 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/30 22:27:49 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,6 @@ void	render_map(t_cub3d *cube)
 	minimap(cube); // MINI_MAP ==> FOR DEBUGGING
 }
 
-
 void	loop_hook(mlx_key_data_t key_data, void *param)
 {
 	t_cub3d	*cube;
@@ -152,6 +151,19 @@ void	loop_hook(mlx_key_data_t key_data, void *param)
 	int		new_y;
 
 	cube = (t_cub3d *)param;
+
+	if (!cube->game_started)
+	{
+		if (key_data.key == MLX_KEY_SPACE && key_data.action == MLX_PRESS)
+		{
+			cube->game_started = true;
+			if (cube->load_image)
+				mlx_delete_image(cube->mlx, cube->load_image); 
+		}
+		if (key_data.key == MLX_KEY_ESCAPE)
+			exit(0);
+		return;
+	}
 	if (key_data.action == MLX_PRESS || key_data.action == MLX_REPEAT)
 	{
 		if (key_data.key == MLX_KEY_W)
@@ -183,7 +195,7 @@ void	loop_hook(mlx_key_data_t key_data, void *param)
 			return ;
 	}
 	strafe = cube->player.strafe_direction * cube->player.movement_speed;
-	if(!strafe)
+	if (!strafe)
 		step = cube->player.walk_direction * cube->player.movement_speed;
 	else
 		step = cube->player.walk_direction;
@@ -194,9 +206,27 @@ void	loop_hook(mlx_key_data_t key_data, void *param)
 		cube->player.x = new_x;
 		cube->player.y = new_y;
 	}
-	cube->player.rotation_angle += cube->player.turn_direction
-		* cube->player.rotation_speed;
+	cube->player.rotation_angle += cube->player.turn_direction * cube->player.rotation_speed;
 	render_map(cube);
+}
+
+
+void	render_loading_screen(t_cub3d *cube)
+{
+	if (cube->loading_screen)
+	{
+		mlx_image_t *image = mlx_texture_to_image(cube->mlx, cube->loading_screen);
+		if (image)
+		{
+			mlx_image_to_window(cube->mlx, image, 0, 0);
+			cube->load_image = image;
+		}
+		else
+		{
+			print_err("Failed to create image from texture");
+			exit(1);
+		}
+	}
 }
 
 int	main(int ac, char **av)
@@ -212,6 +242,9 @@ int	main(int ac, char **av)
 	if (!parser(&cube, av[1]))
 		return (1);
 	initialize_mlx(&cube);
+	cube.loading_screen = mlx_load_png("textures/lol.png");
+	cube.game_started = false;
+	render_loading_screen(&cube);
 	render_map(&cube);
 	mlx_key_hook(cube.mlx, loop_hook, &cube);
 	mlx_loop(cube.mlx);

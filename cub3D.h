@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/08/30 10:35:39 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/08/30 22:29:32 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,7 @@ typedef struct s_cub3d
 {
 	void				*mlx;
 	void				*image;
+	void				*load_image;
 	int					width;
 	int					height;
 	int					floor_r;
@@ -176,9 +177,11 @@ typedef struct s_cub3d
 	int					player_direction;
 	double				center_factor;
 	bool				initial;
+	bool                game_started;
 	t_textures			textures;
 	t_map				*map;
 	t_player			player;
+	mlx_texture_t			*loading_screen;
 }	t_cub3d;
 
 // PARSING
