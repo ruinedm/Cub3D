@@ -6,7 +6,7 @@
 /*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 16:25:46 by aboukdid          #+#    #+#             */
-/*   Updated: 2024/10/23 21:39:44 by aboukdid         ###   ########.fr       */
+/*   Updated: 2024/10/26 20:30:04 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,14 @@ void	move_player(t_cub3d *cube, t_move move)
 		cube->player.x = move.new_x;
 		cube->player.y = move.new_y;
 	}
+}
+
+void	close_hook(void *param)
+{
+	t_cub3d	*cube;
+
+	cube = (t_cub3d *)param;
+	mlx_delete_image(cube->mlx, cube->image);
+	mlx_terminate(cube->mlx);
+	exit(EXIT_SUCCESS);
 }

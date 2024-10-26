@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   key_hooks.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 07:31:13 by mboukour          #+#    #+#             */
-/*   Updated: 2024/10/26 17:18:39 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/10/26 20:30:54 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,12 @@ void	player_movement(t_cub3d *cube)
 		move.step = cube->player.walk_direction * cube->player.movement_speed;
 	else
 		move.step = cube->player.walk_direction;
-	move.new_x = roundf(cube->player.x + move.step * cos(cube->player.rotation_angle)
-		+ move.strafe * cos(move.strafe_angle));
-	move.new_y = roundf(cube->player.y + move.step * sin(cube->player.rotation_angle)
-		+ move.strafe * sin(move.strafe_angle));
+	move.new_x = roundf(cube->player.x + move.step
+			* cos(cube->player.rotation_angle)
+			+ move.strafe * cos(move.strafe_angle));
+	move.new_y = roundf(cube->player.y + move.step
+			* sin(cube->player.rotation_angle)
+			+ move.strafe * sin(move.strafe_angle));
 	move_player(cube, move);
 	cube->player.rotation_angle += cube->player.turn_direction
 		* cube->player.rotation_speed;

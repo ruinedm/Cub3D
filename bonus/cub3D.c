@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:30 by mboukour          #+#    #+#             */
-/*   Updated: 2024/10/26 16:57:59 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/10/26 20:27:18 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,25 +95,9 @@ void	set_player_position(t_cub3d *cube)
 		y++;
 	}
 }
-void close_hook(void *param)
-{
-	t_cub3d	*cube;
-	
-	cube = (t_cub3d *)param;
-	mlx_delete_image(cube->mlx, cube->image);
-	mlx_terminate(cube->mlx);
-	exit(EXIT_SUCCESS);
-}
-
-void test()
-{
-	system("leaks cub3D");
-	system("lsof -c cub3D");
-}
 
 int	main(int ac, char **av)
 {
-	atexit(test);
 	t_cub3d	cube;
 
 	if (ac != 2)

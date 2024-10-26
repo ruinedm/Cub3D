@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/10/26 17:14:40 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/10/26 20:27:39 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -293,5 +293,6 @@ void				move_player(t_cub3d *cube, t_move move);
 void				sprite(t_cub3d *cube, bool first);
 void				init_sprites(t_cub3d *cube);
 bool				validate_map(t_map *map, t_cub3d *cube);
+void				close_hook(void *param);
 
 #endif 

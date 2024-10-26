@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helper.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:32:40 by aboukdid          #+#    #+#             */
-/*   Updated: 2024/10/26 17:07:27 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/10/26 20:30:20 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void	set_flo_ce(t_cub3d *cube)
 		x++;
 	}
 }
-
 
 int	set_color_textures(char **str, t_cub3d *cube)
 {

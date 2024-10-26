@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aboukdid <aboukdid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 17:27:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/10/26 17:18:54 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/10/26 20:29:49 by aboukdid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -260,5 +260,6 @@ void				render_texture(t_cub3d *cube, t_texture_ren *ren_info,
 						double y_pos, mlx_texture_t *texture);
 void				move_player(t_cub3d *cube, t_move move);
 bool				validate_map(t_map *map, t_cub3d *cube);
+void				close_hook(void *param);
 
 #endif
