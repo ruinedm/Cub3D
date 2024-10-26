@@ -1,0 +1,13 @@
+NO bonus/textures/no.png
+EA bonus/textures/ea.png
+SO bonus/textures/so.png
+WE bonus/textures/we.png
+DO bonus/textures/door.png
+
+C 1,255,255
+F    175,255,1
+11111111111
+1S000000001
+10001D10001
+10000000001
+11111111111
